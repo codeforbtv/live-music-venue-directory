@@ -1,0 +1,23 @@
+Live Music Venue Directory (Vermont)
+====================================
+
+Purpose
+-------
+
+The Big Heavy World Live Music Venue Directory is a tool for Vermont-based and touring artists to orient to the opportunities to perform in Vermont. It helps artists identify which venues are worth putting effort into getting booked at and provides the information needed to communicate with them. Not every music venue is a good match with every artist or band. For example, the venue might be too big or small, or have programming interests that don't fit the artist's style of music, etc.
+
+Features
+--------
+
+The Big Heavy World directory is embedding virtual tour images that allow online viewers to stand "inside" the venue, on the stage, and see how comfortable a fit the venue is. The venues appear on a map and the description of the venue should be a wiki entry on the Big Heavy World wiki site. Vermont bands will be helped to find their way to perform around the state, widening their audience, and out of state bands touring through Vermont via this resource will connect with local artists, opening up opportunities for gig swaps that bring Vermont's music to other parts of the world. The venue directory should be searchable by geographic region.
+
+Track(s)
+--------
+
+* Build Civic Apps
+* Open Data
+
+Domain Expert(s)
+----------------
+
+* James Lockridge
