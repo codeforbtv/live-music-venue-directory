@@ -37,14 +37,13 @@ create table pictures (
   pic text
 );
 
-insert into genres values
-(1, "Alternative"),
-(2, "Country"),
-(3, "Pop/Rock"),
-(4, "Classical"),
-(5, "Bluegrass"),
-(6, "Folk"),
-(7, "Acoustic"),
-(8, "Blues/Gospel"),
-(9, "Choir/Chorus");
-
+insert into 'genres'
+  select '1' as genre_id, 'Alternative' as 'genre'
+union select '2', 'Country'
+union select '3', 'Pop/Rock'
+union select '4', 'Classical'
+union select '5', 'Bluegrass'
+union select '6', 'Folk'
+union select '7', 'Acoustic'
+union select '8', 'Blues/Gospel'
+union select '9', 'Choir/Chorus';
