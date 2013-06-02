@@ -8,6 +8,7 @@ create table venues (
   state char(2),
   zip char(10),
   website text,
+  phone text,
   description text,
   capacity integer,
   techInfo text,
