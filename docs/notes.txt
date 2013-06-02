@@ -1,0 +1,100 @@
+Big Heavy World Live Music Venue Directory Notes
+
+Stuff about Backbone
+
+This is good too, has stuff about how we can handle the detail-page url:
+http://blogs.captechconsulting.com/blog/joshua-stickles/single-page-web-apps-using-backbonejs
+http://backbonetutorials.com/what-is-a-view/
+
+Genres
+Alternative/Other
+Country
+Pop/Rock
+Classical
+Bluegrass
+Folk
+Acoustic
+Blues/Gospel
+Jazz
+Choir/Chorus
+Venue Database/Fields
+Name
+Address Line 1
+Address Line 2
+City
+State?
+Zip?
+website
+Booking Person to Contact
+Booking Phone #
+Booking Email?
+Genres that play here usually
+360 degree view
+pictures
+Description
+capacity
+technical info
+(geolocation -- calculated)
+url-name
+type of venue (restaurant, coffeeshop)
+
+
+http://www.bigheavyworld.com/venue/url-name
+http://www.bigheavyworld.com/venue/als_french_fries
+http://davidwalsh.name/web-service-php-mysql-xml-json
+Collaborators
+Evan Flynn
+evan.flynn@gmail.com
+@erflynn
+
+Rebecca Grenier
+rebeccagrenier@gmail.com
+@beckythebest
+
+Ben Glassman
+bglassman@gmail.com
+
+Nicholas Edwards
+arsenic181@gmail.com
+
+William Keys
+william.keys1@gmail.com
+
+We can do this today perhaps, someone create a mysql table start populating it with data and code like this in PHP
+
+http://davidwalsh.name/web-service-php-mysql-xml-json
+
+So this looks like they are creating a main feed which I am not entirely sure we will need, but what we definitely will need is a web service where we can get all the information on one venue, something like this:
+
+http://www.apilocation.com/venue/als_french_fries.html  and it will give us the json for all fields we have for Al's French Fries in the table.
+
+
+Generated JSON data at www.json-generator.com in the following format:
+[
+    '{{repeat(10)}}',
+    {
+        id: '{{index}}',
+        pictures: [
+            '{{repeat(2)}}',    'http://placehold.it/{{lorem(1)}}.jpg'
+        ],
+        contactName: '{{firstName}} {{lastName}}',
+        company: '{{company}}',
+        booking_phone: '{{phone}}',
+        booking_email: '{{email}}',
+        website: 'www.webite.com',
+        address1: '{{numeric(10000,40000)}} {{street}}',
+        address2: '{{numeric(10000,40000)}} {{street}}',
+        city: '{{city}}', 
+        state: 'VT',
+        zip: '05675',
+        description: '{{lorem(50,100)}}',
+        genres: [
+            '{{repeat(7)}}',
+            '{{lorem(1)}}'
+        ],
+        view_360: '{{lorem(1)}}',
+        capacity: '{{numeric(5,5000)}}',
+        technical_info: '{{lorem(25,50)}}'
+    }
+]
+

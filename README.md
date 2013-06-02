@@ -53,3 +53,5 @@ Notes from discussion with Jim Lockridge after presenting demo/index.html on day
 
 Nick Edward's notes from day 1 planning.
 
+The idea behind this is use php to provide web services, which will be consumed by a front-side javascript/backbone single page
+application, two demos of which are in the demos folder (one with and without backbone).
