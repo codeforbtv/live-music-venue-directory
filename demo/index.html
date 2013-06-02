@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+	<meta charset="UTF-8" />
+	<title>Vermont Music Venue Directory</title>
+	<link rel="stylesheet" type="text/css" href="css/styles.css" />
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.css" />
+	<script type="text/javascript" src="js/jquery-1.10.1.js"></script>
+	<script src="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.js"></script>
+</head>
+<body class="search-view">
+	<div id="wrapper">
+		<div id="container">
+			<div id="content" class="">
+				<div id="banner">
+					<div id="logo">
+						<img src="images/big-heavy-world.jpg" alt="Big Heavy World Logo" width="137" height="115" />
+						<p>Big Heavy World</p>
+					</div>
+					<p id="tagline">Big Heavy World</p>
+					<h1>Vermont Music Venue Search</h1>
+				</div>
+				<div id="search_form_container">
+					<form id="search_form" name="search-form" action="#">
+						<input type="text" id="search_box" name="main-search" placeholder="Search..." />
+						<input type="submit" id="search_submit" name="main-search-button" value="Browse" />
+					</form>
+				</div>
+				<div id="map_container">
+				</div>
+				<div id="list_container">
+					<div class="list-results">
+						<ul id="results">
+							<li class="venue">
+								<h2 class="name"><a href="#" title="View Details">Higher Ground</a></h2>
+								<p class="type">Venue Type: Concert Hall</p>
+								<p class="capacity">Capacity: Ballroom - 600, Showcase Lounge - 300</p>
+								<p class="address"><span class="1">1214 Williston Rd</span><span class="2">S. Burlington, VT 05403</span></p>
+								<p class="phone">(802) 652-0777</p>
+							</li>
+							<li class="venue">
+								<h2 class="name"><a href="#" title="View Details">Memorial Auditorium</a></h2>
+								<p class="type">Venue Type: Concert Hall/Auditorium</p>
+								<p class="capacity">Capacity: 2,500</p>
+								<p class="address"><span class="1">250 Main St</span><span class="2">Burlington, VT 05401</span></p>
+								<p class="phone">(802) 864-6044</p>
+							</li>
+							<li class="venue">
+								<h2 class="name"><a href="#" title="View Details">Club Metronome</a></h2>
+								<p class="type">Venue Type: Club</p>
+								<p class="capacity">Capacity: 250</p>
+								<p class="address"><span class="1">188 Main Street</span><span class="2">Burlington, VT 05401</span></p>
+								<p class="phone">(802) 658-4771</p>
+							</li>
+							<li class="venue">
+								<h2 class="name"><a href="#" title="View Details">Higher Ground</a></h2>
+								<p class="type">Venue Type: Concert Hall</p>
+								<p class="capacity">Capacity: Ballroom - 600, Showcase Lounge - 300</p>
+								<p class="address"><span class="1">1214 Williston Rd</span><span class="2">S. Burlington, VT 05403</span></p>
+								<p class="phone">(802) 652-0777</p>
+							</li>
+							<li class="venue">
+								<h2 class="name"><a href="#" title="View Details">Memorial Auditorium</a></h2>
+								<p class="type">Venue Type: Concert Hall/Auditorium</p>
+								<p class="capacity">Capacity: 2,500</p>
+								<p class="address"><span class="1">250 Main St</span><span class="2">Burlington, VT 05401</span></p>
+								<p class="phone">(802) 864-6044</p>
+							</li>
+							<li class="venue">
+								<h2 class="name"><a href="#" title="View Details">Club Metronome</a></h2>
+								<p class="type">Venue Type: Club</p>
+								<p class="capacity">Capacity: 250</p>
+								<p class="address"><span class="1">188 Main Street</span><span class="2">Burlington, VT 05401</span></p>
+								<p class="phone">(802) 658-4771</p>
+							</li>
+							<li class="venue">
+								<h2 class="name"><a href="#" title="View Details">Higher Ground</a></h2>
+								<p class="type">Venue Type: Concert Hall</p>
+								<p class="capacity">Capacity: Ballroom - 600, Showcase Lounge - 300</p>
+								<p class="address"><span class="1">1214 Williston Rd</span><span class="2">S. Burlington, VT 05403</span></p>
+								<p class="phone">(802) 652-0777</p>
+							</li>
+							<li class="venue">
+								<h2 class="name"><a href="#" title="View Details">Memorial Auditorium</a></h2>
+								<p class="type">Venue Type: Concert Hall/Auditorium</p>
+								<p class="capacity">Capacity: 2,500</p>
+								<p class="address"><span class="1">250 Main St</span><span class="2">Burlington, VT 05401</span></p>
+								<p class="phone">(802) 864-6044</p>
+							</li>
+							<li class="venue">
+								<h2 class="name"><a href="#" title="View Details">Club Metronome</a></h2>
+								<p class="type">Venue Type: Club</p>
+								<p class="capacity">Capacity: 250</p>
+								<p class="address"><span class="1">188 Main Street</span><span class="2">Burlington, VT 05401</span></p>
+								<p class="phone">(802) 658-4771</p>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div id="footer">
+					<p>Partially designed/built by a seemingly random conglomerate of skilled people.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+<script type="text/javascript">
+var MapService = function(map) {
+	this.map = map;
+	this.markerGroup = L.featureGroup().addTo(map);
+};
+
+MapService.prototype.displayVenues = function(venues) {
+	this.clearMarkers();
+	for (x in venues) {
+		this.addVenue(venues[x]);
+	}
+	this.fitToMarkerGroup();
+};
+
+MapService.prototype.addVenue = function(venue) {
+	var marker = L.marker([venue.lat, venue.lng]);
+	marker.bindPopup(venue.name);
+	this.markerGroup.addLayer(marker);
+
+	return marker;
+};
+
+MapService.prototype.clearMarkers = function() {
+	this.markerGroup.clearLayers();
+};
+
+MapService.prototype.fitToMarkerGroup = function() {
+	this.map.invalidateSize();
+	this.map.fitBounds(this.markerGroup.getBounds());
+};
+
+var apiKey = '6ded93aafce14dbeaf33173762046262';
+var map = L.map('map_container').setView(new L.LatLng(43.871754,-72.447783), 7);
+	L.tileLayer('http://{s}.tile.cloudmade.com/' + apiKey + '/997/256/{z}/{x}/{y}.png', {
+		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+		maxZoom: 18
+	}).addTo(map);
+
+var venueMapService = new MapService(map);
+
+$(document).ready(function() {
+	var searchForm = $('#search_form');
+
+	searchForm.on('submit', function(e) {
+		e.preventDefault();
+		$('body').addClass('two-col');
+		venueMapService.displayVenues([
+			{
+				name: 'Higher Groud Music',
+				lat: 44.468887,
+				lng: -73.175640
+			},
+			{
+				name: 'Flynn Theater',
+				lat: 44.475795,
+				lng: -73.213040
+			},
+			{
+				name: 'Signal Kitchen',
+				lat: 44.475425,
+				lng: -73.216677
+			}
+		]);
+	});
+
+});
+
+</script>
+</body>
+</html>
