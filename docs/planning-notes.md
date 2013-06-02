@@ -65,9 +65,20 @@ As a band or musician I need to be able to see technical information such as wir
 
 As a band or musician or music fan I can view submitted reviews of a venue so I know whether its a good place to see/play a show
 
-## Similar Sites
+## Views
 
+Search Landing
+	Search Form
+		Near me
+		By address
+		Radius
+	Map
+		Map with clickable regions
 
-
+Map Search Results
+	Search Form
+	Link to regions view
+	List view
+	
 ## Questions
 * What hardware and software and format is being used for the virtual tours
