@@ -37,3 +37,19 @@ Domain Expert(s)
 ----------------
 
 * James Lockridge
+
+Documentation
+-------------
+
+## planning-notes.md
+
+Planning notes from day 1 including requirements, definition of user roles, prioritized user stories and other notes.
+
+## demo-review-notes.md
+
+Notes from discussion with Jim Lockridge after presenting demo/index.html on day 2
+
+## BigHeavyWorldNotes.txt
+
+Nick Edward's notes from day 1 planning.
+

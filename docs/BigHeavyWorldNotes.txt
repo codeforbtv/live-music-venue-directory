@@ -1,0 +1,51 @@
+Big Heavy World Interactive Map:
+Notes:
+Search via:
+	Venue
+	Event
+	Band
+	Misc. (music shop, music-related business)
+Security is an issue, currently the wordpress theme is shared with the phpBB forum, if either goes down, the other one goes down as well
+	Data:
+		Interactive Map populated by venue, event, band information
+		Need interface to input new information
+		Pull events from state calendar to partially populate the calendar
+		Need 360 degree views of the venues (virtual tour)
+Works like existing map system but with more filters
+	General Filters:
+		location (radius)
+		town/city name
+		categories
+
+Identify all ages shows/ 18+ / 21+
+Identify free shows
+Easily identify the difference between venues, events, bands (potentially by color code or something similar)
+
+
+Use Cases:
+Potential show attendees
+	View a list of closeby venues - viewable via map, can be a list
+	View a list of upcoming events - filterable by venue - viewed as a list, but can be viewed as a map
+	
+Bands touring - check out other venues in the same (region)
+	Able to view potential gig locations and their contact information
+	Able to view venue type (theatre, small bar, restaurant)
+	Search by region/town for venues
+Venue owners to promote their venue (keep updated information, etc)
+BHW - Admin
+	Able to add/edit/delete venues
+	Able to add/edit/delete events
+	
+Venues:
+	360 Degree View
+	Have genres associated with them for the types of shows they play
+	Capacity (so people can get a sense for how large the venue is)
+	Hours
+	Location (address + special instructions "upstairs/side door" etc)
+	Technical details (for bands: sound guy on staff, wifi provided, type of equipment on site, etc)
+	Reviews (sortable by who wrote them, band members/show attendees/etc)
+Events:
+	
+Bands:
+	Able to "pitch" to multiple venues in an area in order to organize gigs
+	
