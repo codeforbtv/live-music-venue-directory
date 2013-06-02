@@ -1,0 +1,120 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+	<title>BHW Venue Directory</title>
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.css" />
+	<!--[if lte IE 8]>
+		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.ie.css" />
+	<![endif]-->
+
+	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+	<script src="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.js"></script>
+	<style type="text/css" media="all">
+		#map {
+			float: left;
+			width: 100%;
+			height: 1000px;
+		}
+		#list-results {
+			display: none;
+			float: left;
+			padding: 5px 5%;
+			width: 20%;
+		}
+		.results #map {
+			width: 70%;
+		}
+		.results #list-results {
+			display: block;
+		}
+	</style>
+</head>
+<body>
+
+	<form id="search-form">
+		<input type="text" placeholder="Address or City, State or zip" />
+		<button id="submit">Search</button>
+	</form>
+
+	<div id="map">
+	
+	</div>
+
+	<div id="list-results">
+		<h2>Flynn Center</h2>
+		<h2>Signal Kitchen</h2>
+		<h2>Higher Ground</h2>
+	</div>
+	
+<script type="text/javascript">
+var MapService = function(map) {
+	this.map = map;
+	this.markerGroup = L.featureGroup().addTo(map);
+};
+
+MapService.prototype.displayVenues = function(venues) {
+	this.clearMarkers();
+	for (x in venues) {
+		this.addVenue(venues[x]);
+	}
+	this.fitToMarkerGroup();
+};
+
+MapService.prototype.addVenue = function(venue) {
+	var marker = L.marker([venue.lat, venue.lng]);
+	marker.bindPopup(venue.name);
+	this.markerGroup.addLayer(marker);
+
+	return marker;
+};
+
+MapService.prototype.clearMarkers = function() {
+	this.markerGroup.clearLayers();
+};
+
+MapService.prototype.fitToMarkerGroup = function() {
+	this.map.invalidateSize();
+	this.map.fitBounds(this.markerGroup.getBounds());
+};
+
+var apiKey = '6ded93aafce14dbeaf33173762046262';
+var map = L.map('map').setView(new L.LatLng(43.871754,-72.447783), 7);
+	L.tileLayer('http://{s}.tile.cloudmade.com/' + apiKey + '/997/256/{z}/{x}/{y}.png', {
+		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+		maxZoom: 18
+	}).addTo(map);
+
+var venueMapService = new MapService(map);
+
+$(document).ready(function() {
+	var searchForm = $('#search-form'),
+		listResults = $('#list-results');
+
+	searchForm.on('submit', function(e) {
+		e.preventDefault();
+		$('body').addClass('results');
+		venueMapService.displayVenues([
+			{
+				name: 'Higher Groud Music',
+				lat: 44.468887,
+				lng: -73.175640
+			},
+			{
+				name: 'Flynn Theater',
+				lat: 44.475795,
+				lng: -73.213040
+			},
+			{
+				name: 'Signal Kitchen',
+				lat: 44.475425,
+				lng: -73.216677
+			}
+		]);
+	});
+
+});
+
+</script>
+</body>
+</html>
