@@ -37,3 +37,21 @@ Domain Expert(s)
 ----------------
 
 * James Lockridge
+
+Documentation
+-------------
+
+## planning-notes.md
+
+Planning notes from day 1 including requirements, definition of user roles, prioritized user stories and other notes.
+
+## demo-review-notes.md
+
+Notes from discussion with Jim Lockridge after presenting demo/index.html on day 2
+
+## BigHeavyWorldNotes.txt
+
+Nick Edward's notes from day 1 planning.
+
+The idea behind this is use php to provide web services, which will be consumed by a front-side javascript/backbone single page
+application, two demos of which are in the demos folder (one with and without backbone).
