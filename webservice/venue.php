@@ -1,4 +1,3 @@
-
 <?php
 /*
 * Web service 
@@ -6,29 +5,54 @@
 */
 
 /* require the user as the parameter */
+
+include_once('config.php');
+
 if(isset($_GET['city']) ) {
 
 	/* soak in the passed variable or set our own */
 	$number_of_posts = isset($_GET['num']) ? intval($_GET['num']) : 10; //10 is the default
-	$format = strtolower($_GET['format']) == 'json' ? 'json' : 'xml'; //xml is the default
-	$city = $_GET['city']; //no default
+	$number_of_posts = mysql_real_escape_string($number_of_posts);
+	
+	$format = strtolower($_GET['format']) == 'json' ? 'json' : 'xml'; 	//xml is the default
+	$format = mysql_real_escape_string($format);
+	
+	$city   = $_GET['city']; //no default
+	$city   = mysql_real_escape_string($city);
+	
 
 	/* connect to the db */
-	$link = mysql_connect('localhost','username','password') or die('Cannot connect to the DB');
-	mysql_select_db('bigheavyworld',$link) or die('Cannot select the DB');
-
+	$link = mysql_connect($db['host'],$db['user'],$db['password']) or die('Cannot connect to the DB');
+	mysql_select_db($db['database'], $link)  or die('No database selected');
+	
 	/* grab the posts from the db */
-	$query = "SELECT * from venues where city = '$city'";
-	$result = mysql_query($query,$link) or die('Errant query:  '.$query);
+	
+	
+	$query    = "SELECT * from venues where city = '" . $city . "'
+			     LIMIT " . $number_of_posts;
+	$result   = mysql_query($query, $link) or die('Errant query:  '.mysql_error($link));
+	$num_rows = mysql_num_rows($result);
 
 	/* create one master array of the records */
 	$posts = array();
+	
+	// Build a mold for our returned object
+	$posts['id'] 	= 1;
+	$posts['number_of_posts'] = $number_of_posts;
+	$posts['returned_number'] = $num_rows;
+	$posts['city']  = ucfirst($city);
+	
 	if(mysql_num_rows($result)) {
 		while($post = mysql_fetch_assoc($result)) {
-			$posts[] = array('post'=>$post);
+			$posts['result'][] = $post;
 		}
 	}
 
+	/***************************************/
+	# Used for debugging
+	print_r($posts);
+	/***************************************/
+	
 	/* output in necessary format */
 	if($format == 'json') {
 		header('Content-type: application/json');
