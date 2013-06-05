@@ -14,26 +14,42 @@ $(document).ready(function() {
 	var venueMapService = new MapService(map);
 
 	// Do the search
+	
 	searchForm.on('submit', function(e) {
+	
 		e.preventDefault();
+		
 		$('body').addClass('two-col');
+		var search_value = $("#search_box").val();
+		var format = 'json';
+		
+		$.ajax({
+			url: "http://localhost/callbacks/bigheavyworld/webservice/venue.php",
+			data: {city: search_value, format: format},
+			async: true
+		}).done(function(data) {
+			venueMapService.displayVenues(data);
+		});
+		
+		/*
 		venueMapService.displayVenues([
-			{
-				name: 'Higher Groud Music',
-				lat: 44.468887,
-				lng: -73.175640
-			},
-			{
-				name: 'Flynn Theater',
-				lat: 44.475795,
-				lng: -73.213040
-			},
-			{
-				name: 'Signal Kitchen',
-				lat: 44.475425,
-				lng: -73.216677
-			}
+		{
+			name: 'Higher Groud Music',
+			lat: 44.468887,
+			lng: -73.175640
+		},
+		{
+			name: 'Flynn Theater',
+			lat: 44.475795,
+			lng: -73.213040
+		},
+		{
+			name: 'Signal Kitchen',
+			lat: 44.475425,
+			lng: -73.216677
+		}
 		]);
+		*/
 	});
 
 });
