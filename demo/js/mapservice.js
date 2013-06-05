@@ -9,18 +9,19 @@ var MapService = function(map) {
 // Display venues on the map
 MapService.prototype.displayVenues = function(venues) {
 	this.clearMarkers();
-	for (x in venues) {
-		this.addVenue(venues[x]);
+
+	for (x in venues.posts['result']) {
+		this.addVenue(venues.posts['result'][x]);
 	}
 	this.fitToMarkerGroup();
 };
 
 // Add a venue to the map, with info popup
 MapService.prototype.addVenue = function(venue) {
-	var marker = L.marker([venue.lat, venue.lng]);
-	marker.bindPopup(venue.name);
-	this.markerGroup.addLayer(marker);
 
+	var marker = L.marker([venue.lat, venue.lng]);
+	marker.bindPopup(venue.business_name);
+	this.markerGroup.addLayer(marker);
 	return marker;
 };
 
