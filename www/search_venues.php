@@ -28,7 +28,8 @@ if ($location) {
 	/* grab the venues from the db */
 	
 	/**********************************************************************************************
-	// This will eventually be the main query for the list but there are some google API issues
+	// TODO: Need to register google maps API key
+	// TODO: Switch this to use Geocoder library with Google Maps providers
 	/**********************************************************************************************/
 	$url = 'http://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($location) . '&sensor=true';
 	$geo_data = file_get_contents($url);
