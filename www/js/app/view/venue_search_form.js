@@ -24,6 +24,7 @@ define(['jquery', 'underscore', 'backbone', 'mirui', 'text!tpl/venue_search_form
 			dispatcher.trigger('search', { location: this.$location.val() });
 			this.$extra.slideUp();
 		},
+		// TODO: Make it so when clicking outside extra div hides it
 		focus: function(e) {
 			this.$extra.slideDown();
 		}
