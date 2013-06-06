@@ -18,7 +18,6 @@ function($, Backbone, _, dispatcher, MapRenderer) {
 
 			this.map.displayVenues(this.collection.models);
 		},
-		// TODO: This doesnt reset the list view? Should it?
 		reset: function() {
 			this.map.reset();
 		}

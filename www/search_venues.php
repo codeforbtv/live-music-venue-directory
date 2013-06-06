@@ -1,5 +1,4 @@
 <?php
-// TODO: Remove useage of @ syntax for error suppression
 /*
 * Web service 
 * http://localhost/live-music-venue-directory/webservice/venue.php?city=Burlington&num=10&format=json
@@ -16,7 +15,6 @@ $radius = isset($_GET['radius']) ? $_GET['radius'] : 25;
 $format = strtolower($_GET['format']) == 'xml' ? 'xml' : 'json';
 
 if (!$location) {
-	// TODO: error in correct format
 	die('Please supply a location.');
 }
 
@@ -36,10 +34,6 @@ if ($location) {
 	
 	/* grab the venues from the db */
 	
-	/**********************************************************************************************
-	// TODO: Need to register google maps API key
-	// TODO: Switch this to use Geocoder library with Google Maps providers
-	/**********************************************************************************************/
 	$url = 'http://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($location) . '&sensor=true';
 	$geo_data = file_get_contents($url);
 	$geo_data = json_decode($geo_data);

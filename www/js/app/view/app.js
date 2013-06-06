@@ -13,7 +13,6 @@ function(_, Backbone, dispatcher, tpl, VenueSearchFormView, VenueCollection, Ven
 		},
 		render: function() {
 			this.$el.html(this.template());
-			// TODO: Better way to handle subviews, LayoutManager?
 			this.searchView = new VenueSearchFormView({
 				el: this.$('#search-form')
 			});
@@ -35,7 +34,6 @@ function(_, Backbone, dispatcher, tpl, VenueSearchFormView, VenueCollection, Ven
 			this.mapView.collection = venueCollection;
 			this.mapView.render();
 		} else {
-			// TODO: Better handling for no results
 			alert('No venues match your search');
 		}
 	};

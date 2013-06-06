@@ -28,7 +28,6 @@ require.config({
 	}
 });
 
-// TODO: Need more elegant way to set search and other urls? Collection url?
 define('app_options', {
 	search_url: '/search_venues.php'
 });

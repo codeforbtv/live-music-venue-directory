@@ -4,7 +4,6 @@ define(['leaflet', 'app/event_dispatcher', 'app/map/data/counties.geo.json'], fu
 
 	// MapService
 	// Author: Ben Glassman <bglassman@gmail.com>
-	// TODO: None of this map info should be hard coded, need a way to pass config through
 	var MapService = function(container) {
 		this.map = L.map(container);
 		this.markerGroup = L.featureGroup().addTo(this.map);
