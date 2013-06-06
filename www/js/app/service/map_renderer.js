@@ -36,7 +36,11 @@ define(['leaflet', 'app/event_dispatcher', 'app/map/data/counties.geo.json'], fu
 		// County GeoJSON
 		this.countyGroup = L.featureGroup().addTo(this.map).bringToBack();
 		for (x in this.counties) {
-			this.countyGroup.addLayer(L.geoJson(this.counties[x]));
+			var county = L.geoJson(this.counties[x]);
+			county.on('click', function(e) {
+				console.log('clicked a county', e);
+			});
+			this.countyGroup.addLayer(county);
 		}
 	};
 
