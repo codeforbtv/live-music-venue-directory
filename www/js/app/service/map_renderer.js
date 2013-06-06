@@ -29,7 +29,7 @@ define(['leaflet'], function(L) {
 	// Add a venue to the map, with info popup
 	MapService.prototype.addVenue = function(venue) {
 		var marker = L.marker([venue.get('lat'), venue.get('lng')]);
-		marker.bindPopup(venue.get('name'));
+		marker.bindPopup(venue.get('business_name'));
 		this.markerGroup.addLayer(marker);
 
 		return marker;
