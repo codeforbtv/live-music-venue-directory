@@ -1,0 +1,12 @@
+<?php
+
+$parameters = array(
+	'db_config' => array(
+		'host'     => 'localhost',
+		'user'     => 'bigheavyworld',
+		'password' => '',
+		'database' => 'bigheavyworld'
+	)
+);
+
+return $parameters;
