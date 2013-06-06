@@ -1,3 +1,4 @@
+// TODO:  Clean up geo json to include a single FeatureCollection of all counties instead of an array of feature collections that each have a single county;
 define(function() {
 	return [
 {"type":"FeatureCollection","properties":{"kind":"state","state":"VT"},"features":[
