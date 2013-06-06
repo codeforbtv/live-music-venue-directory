@@ -1,4 +1,4 @@
-define(['leaflet'], function(L) {
+define(['leaflet', 'app/event_dispatcher'], function(L, dispatcher) {
 
 	var apiKey = '6ded93aafce14dbeaf33173762046262';
 
@@ -8,6 +8,7 @@ define(['leaflet'], function(L) {
 	var MapService = function(container) {
 		this.map = L.map(container);
 		this.markerGroup = L.featureGroup().addTo(this.map);
+		this.markers = {};
 
 		// Set map view to vermont
 		this.map.setView(new L.LatLng(43.871754,-72.447783), 7);
@@ -28,20 +29,51 @@ define(['leaflet'], function(L) {
 
 	// Add a venue to the map, with info popup
 	MapService.prototype.addVenue = function(venue) {
-		var marker = L.marker([venue.get('lat'), venue.get('lng')]);
+		var marker = L.marker([venue.get('lat'), venue.get('lng')]),
+			isOpen = false,
+			_this = this;
 		// TODO: Fix issue where clicking while hovered hides the popup for a second
 		marker.bindPopup(venue.get('business_name'));
 		marker.addEventListener({
 			mouseover: function(e) {
+				console.log('over', isOpen);
 				e.target.openPopup();
+				isOpen = true;
 			},
 			mouseout: function(e) {
+				console.log('out', isOpen);
 				e.target.closePopup();
+				isOpen = false;
 			}
 		});
+		// TODO: This should be moved out of the map renderer code into the map list
+		dispatcher.on('venue.hover', function(data) {
+			if (venue.get('id') == data.venue.get('id')) {
+				switch (data.event.type) {
+					case 'mouseenter':
+						console.log('enter', isOpen);
+						if (!isOpen) {
+							marker.openPopup();
+							isOpen = true;
+						}
+						break;
+					case 'mouseleave':
+						console.log('leave', isOpen);
+						marker.closePopup();
+						isOpen = false;
+						break;
+				}
+			}
+		});
+
 		this.markerGroup.addLayer(marker);
+		this.markers[venue.get('id')] = marker;
 
 		return marker;
+	};
+
+	MapService.prototype.getMarkerByVenueId = function(venue_id) {
+		return this.markers[venue_id];
 	};
 
 	// Clear markers

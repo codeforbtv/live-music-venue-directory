@@ -30,8 +30,10 @@ function(_, Backbone, dispatcher, tpl, VenueSearchFormView, VenueCollection, Ven
 		if (venues.length) {
 			this.$el.addClass('twocol');
 			var venueCollection = new VenueCollection(venues);
-			this.listView.render(venueCollection);
-			this.mapView.render(venueCollection);
+			this.listView.collection = venueCollection;
+			this.listView.render();
+			this.mapView.collection = venueCollection;
+			this.mapView.render();
 		} else {
 			// TODO: Better handling for no results
 			alert('No venues match your search');

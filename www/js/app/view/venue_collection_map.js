@@ -1,6 +1,6 @@
 define(
-['backbone', 'underscore', 'service/map_renderer'],
-function(Backbone, _, MapRenderer) {
+['backbone', 'underscore', 'app/event_dispatcher', 'service/map_renderer'],
+function(Backbone, _, dispatcher, MapRenderer) {
 	
 	var VenueCollectionMapView = Backbone.View.extend({
 		initialize: function() {
@@ -8,11 +8,10 @@ function(Backbone, _, MapRenderer) {
 			this.map = new MapRenderer(this.el);
 			this.render(this.collection);
 		},
-		render: function(collection) {
-			var collection = collection || this.collection;
-			if (!collection) return false;
+		render: function() {
+			if (!this.collection) return false;
 
-			this.map.displayVenues(collection.models);
+			this.map.displayVenues(this.collection.models);
 		}
 	});
 
