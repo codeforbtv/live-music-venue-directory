@@ -27,10 +27,15 @@ function(_, Backbone, dispatcher, tpl, VenueSearchFormView, VenueCollection, Ven
 	});
 
 	AppView.prototype.searchComplete = function(venues) {
-		this.$el.addClass('twocol');
-		var venueCollection = new VenueCollection(venues);
-		this.listView.render(venueCollection);
-		this.mapView.render(venueCollection);
+		if (venues.length) {
+			this.$el.addClass('twocol');
+			var venueCollection = new VenueCollection(venues);
+			this.listView.render(venueCollection);
+			this.mapView.render(venueCollection);
+		} else {
+			// TODO: Better handling for no results
+			alert('No venues match your search');
+		}
 	};
 
 	AppView.prototype.ajaxStart = function() {
