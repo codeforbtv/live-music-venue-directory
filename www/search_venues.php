@@ -22,6 +22,14 @@ if (!$location) {
 
 if ($location) {
 
+	// Location is an address string
+	if (!is_zip_code($location)) {
+		// Add vermont if its missing
+		if (!preg_match('/(vt)|(vermont)$/i', $location)) {
+			$location .= ', VT';
+		}
+	}
+
 	/* connect to the db */
 	$link = mysql_connect($db['host'],$db['user'],$db['password']) or die('Cannot connect to the DB');
 	mysql_select_db($db['database'], $link)  or die('No database selected');
@@ -110,4 +118,9 @@ if ($location) {
 
 	/* disconnect from the db */
 	@mysql_close($link);
+}
+
+// Note: doesnt accept non 5 digit zip codes;
+function is_zip_code($text) {
+	return ctype_digit($text) && strlen($text) == 5;
 }
