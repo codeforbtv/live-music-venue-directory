@@ -29,7 +29,16 @@ define(['leaflet'], function(L) {
 	// Add a venue to the map, with info popup
 	MapService.prototype.addVenue = function(venue) {
 		var marker = L.marker([venue.get('lat'), venue.get('lng')]);
+		// TODO: Fix issue where clicking while hovered hides the popup for a second
 		marker.bindPopup(venue.get('business_name'));
+		marker.addEventListener({
+			mouseover: function(e) {
+				e.target.openPopup();
+			},
+			mouseout: function(e) {
+				e.target.closePopup();
+			}
+		});
 		this.markerGroup.addLayer(marker);
 
 		return marker;
