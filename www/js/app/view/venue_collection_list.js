@@ -17,11 +17,9 @@ function($, Backbone, _, dispatcher, VenueCollection, tpl) {
 
 			this.$el.html(compiled_template(data));
 		},
-		// TODO:  Over/Out and Enter/Leave fire too frequently instead of once when mousing over the vneue and once when leaving due to bubbling;
 		venueHover: function(e) {
 			var target = e.target,
 				venue_id = $(e.currentTarget).data('id');
-			//if (e.type == 'mouseleave' && e.target.className.indexOf('.venue') == -1) return;
 
 			dispatcher.trigger('venue.hover', {
 				venue: this.collection.get(venue_id),
