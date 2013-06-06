@@ -1,0 +1,14 @@
+<% if (venues.length) { %>
+<ul>
+<% _.each( venues, function( venue, i ){ %>
+	<li>
+		<h2 class="name"><a href="#" title="View Details"><%= venue.get('name') %></a></h2>
+		<p class="address"><%= venue.getFullAddress() %></p>
+		<p class="phone"><%= venue.get('phone') %></p>
+		<p class="email"><a href="mailto:<%= venue.get('email') %>"><%= venue.get('email') %></a></p>
+	</li>
+<% }); %>
+</ul>
+<% } else { %>
+<p>No items.</p>
+<% } %>

@@ -1,0 +1,9 @@
+{
+  "volo": {
+    "dependencies": {
+      "requirejs-text": "github:ni-jmatthiesen/requirejs-text/master",
+      "text": "github:requirejs/text/2.0.6",
+      "lib-text": "github:requirejs/text/2.0.6"
+    }
+  }
+}
