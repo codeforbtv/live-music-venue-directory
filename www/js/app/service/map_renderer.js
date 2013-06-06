@@ -1,4 +1,4 @@
-define(['leaflet', 'app/event_dispatcher'], function(L, dispatcher) {
+define(['leaflet', 'app/event_dispatcher', 'app/map/data/counties.geo.json'], function(L, dispatcher, counties_geo_json) {
 
 	var apiKey = '6ded93aafce14dbeaf33173762046262';
 
@@ -16,6 +16,11 @@ define(['leaflet', 'app/event_dispatcher'], function(L, dispatcher) {
 			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
 			maxZoom: 18
 		}).addTo(this.map);
+
+		// County GeoJSON
+		for (x in counties_geo_json) {
+			L.geoJson(counties_geo_json[x]).addTo(this.map);
+		}
 	};
 
 	// Display venues on the map
