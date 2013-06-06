@@ -11,7 +11,8 @@ function($, router, dispatcher, AppView) {
 		'search': 'search'
 	};
 
-	App.prototype.init = function() {
+	App.prototype.init = function(options) {
+		this.options = options;
 		this.setupEvents();
 		this.appView = new AppView({
 			el: $('#app')
@@ -30,15 +31,10 @@ function($, router, dispatcher, AppView) {
 
 	App.prototype.search = function(criteria) {
 		var _this = this;
-		// TODO: Obviously this needs to not be hard coded, probably pass in via config?
-		// Does this even belong here?
-		$.getJSON('/data/venues.json', criteria, function(data) {
+		// TODO: Need to gracefully handle errors
+		$.getJSON(this.options.search_url, criteria, function(data) {
 			_this.dispatcher.trigger('search.complete', data.results);
 		});
-	};
-
-	App.prototype.foobar = function() {
-		console.log('foobar beotch');
 	};
 
 	return new App();
