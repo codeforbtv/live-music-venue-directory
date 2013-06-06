@@ -36,12 +36,10 @@ define(['leaflet', 'app/event_dispatcher'], function(L, dispatcher) {
 		marker.bindPopup(venue.get('business_name'));
 		marker.addEventListener({
 			mouseover: function(e) {
-				console.log('over', isOpen);
 				e.target.openPopup();
 				isOpen = true;
 			},
 			mouseout: function(e) {
-				console.log('out', isOpen);
 				e.target.closePopup();
 				isOpen = false;
 			}
@@ -51,14 +49,12 @@ define(['leaflet', 'app/event_dispatcher'], function(L, dispatcher) {
 			if (venue.get('id') == data.venue.get('id')) {
 				switch (data.event.type) {
 					case 'mouseenter':
-						console.log('enter', isOpen);
 						if (!isOpen) {
 							marker.openPopup();
 							isOpen = true;
 						}
 						break;
 					case 'mouseleave':
-						console.log('leave', isOpen);
 						marker.closePopup();
 						isOpen = false;
 						break;
