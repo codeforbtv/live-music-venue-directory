@@ -1,4 +1,5 @@
 <?php
+// TODO: Remove useage of @ syntax for error suppression
 /*
 * Web service 
 * http://localhost/live-music-venue-directory/webservice/venue.php?city=Burlington&num=10&format=json
