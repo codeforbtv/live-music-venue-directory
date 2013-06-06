@@ -11,21 +11,45 @@ define(['leaflet', 'app/event_dispatcher', 'app/map/data/counties.geo.json'], fu
 		this.markers = {};
 
 		// Set map view to vermont
-		this.map.setView(new L.LatLng(43.871754,-72.447783), 7);
+		this.setDefaultView();
 		L.tileLayer('http://{s}.tile.cloudmade.com/' + apiKey + '/997/256/{z}/{x}/{y}.png', {
 			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
 			maxZoom: 18
 		}).addTo(this.map);
 
+		this.showCounties();
+	};
+
+	MapService.prototype.counties = counties_geo_json;
+
+	MapService.prototype.setDefaultView = function() {
+		this.map.setView(new L.LatLng(43.871754,-72.447783), 7);
+	};
+
+	MapService.prototype.reset = function() {
+		this.setDefaultView();
+		this.showCounties();
+		this.clearMarkers();
+	};
+
+	MapService.prototype.showCounties = function() {
 		// County GeoJSON
-		for (x in counties_geo_json) {
-			L.geoJson(counties_geo_json[x]).addTo(this.map);
+		this.countyGroup = L.featureGroup().addTo(this.map).bringToBack();
+		for (x in this.counties) {
+			this.countyGroup.addLayer(L.geoJson(this.counties[x]));
 		}
+	};
+
+	MapService.prototype.hideCounties = function() {
+		this.countyGroup.eachLayer(function(layer) {
+			this.countyGroup.removeLayer(layer);
+		}, this);
 	};
 
 	// Display venues on the map
 	MapService.prototype.displayVenues = function(venues) {
 		this.clearMarkers();
+		this.hideCounties();
 		for (x in venues) {
 			this.addVenue(venues[x]);
 		}
