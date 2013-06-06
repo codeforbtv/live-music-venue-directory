@@ -1,8 +1,5 @@
-require(['app'], function(app) {
+require(['app', 'app_options'], function(app, app_options) {
 
-	app.init({
-		// TODO: Need more elegant way to set search and other urls
-		search_url: '/search_venues.php'
-	});
+	app.init(app_options);
 
 });
