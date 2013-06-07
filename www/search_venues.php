@@ -1,13 +1,8 @@
 <?php
-/*
-* Web service
-* http://localhost/live-music-venue-directory/webservice/venue.php?city=Burlington&num=10&format=json
-*/
 
-/* require the user as the parameter */
-
-$params = require_once __DIR__ . '/../app/config/parameters.php';
-$db = $params['db_config'];
+// Config
+require __DIR__ . '/../vendor/autoload.php';
+$db = require __DIR__ . '/../app/config/database.php';
 
 $location = isset($_GET['location']) ? $_GET['location'] : null;
 $max_results = isset($_GET['max_results']) ? $_GET['max_results'] : 10;
@@ -28,10 +23,6 @@ if ($location) {
         }
     }
 
-    /* connect to the db */
-    $link = mysql_connect($db['host'],$db['user'],$db['password']) or die('Cannot connect to the DB');
-    mysql_select_db($db['database'], $link)  or die('No database selected');
-
     /* grab the venues from the db */
 
     $url = 'http://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($location) . '&sensor=true';
@@ -47,24 +38,25 @@ if ($location) {
         // TODO: Limit should include page param
         $limit_clause = $max_results ? sprintf('LIMIT 0, %d', addslashes($max_results)) : '';
         $query = sprintf("
-            SELECT *, ( 3959 * acos( cos( radians(%s) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(%s) ) + sin( radians(%s) ) * sin( radians( lat ) ) ) ) AS distance
+            SELECT *, ( 3959 * acos( cos( radians(:lat) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(:lng) ) + sin( radians(:lat) ) * sin( radians( lat ) ) ) ) AS distance
             FROM venues
-            HAVING distance < %d
+            HAVING distance < :radius
             ORDER BY distance
             %s
             ",
-            addslashes($lat),
-            addslashes($lng),
-            addslashes($lat),
-            addslashes($radius),
             $limit_clause
         );
     } else {
         // TODO: Error
     }
 
-    $result   = mysql_query($query, $link) or die('Errant query:  '. mysql_error($link));
-    $num_rows = mysql_num_rows($result);
+    // $result   = mysql_query($query, $link) or die('Errant query:  '. mysql_error($link));
+    $results = $db->executeQuery($query, array(
+        'lat' => $lat,
+        'lng' => $lng,
+        'radius' => $radius
+    ));
+    $num_rows = $results->rowCount();
 
     /* create one master array of the records */
     $venues = array();
@@ -75,10 +67,8 @@ if ($location) {
     $venues['location']  = ucfirst($location);
     $venues['results']  = array();
 
-    if(mysql_num_rows($result)) {
-        while($venue = mysql_fetch_assoc($result)) {
-            $venues['results'][] = $venue;
-        }
+    while($venue = $results->fetch()) {
+        $venues['results'][] = $venue;
     }
 
     /***************************************/
@@ -110,7 +100,7 @@ if ($location) {
     }
 
     /* disconnect from the db */
-    @mysql_close($link);
+    $db->close();
 }
 
 // Note: doesnt accept non 5 digit zip codes;
