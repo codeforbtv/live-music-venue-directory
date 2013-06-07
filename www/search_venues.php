@@ -19,7 +19,7 @@ if ($location) {
     if (!is_zip_code($location)) {
         // Add vermont if its missing
         if (!preg_match('/(vt)|(vermont)$/i', $location)) {
-            // $location .= ' Vermont';
+            $location .= ' Vermont';
         }
     }
 
