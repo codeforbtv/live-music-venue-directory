@@ -19,41 +19,42 @@ if ($location) {
     if (!is_zip_code($location)) {
         // Add vermont if its missing
         if (!preg_match('/(vt)|(vermont)$/i', $location)) {
-            $location .= ' Vermont';
+            // $location .= ' Vermont';
         }
     }
 
-    /* grab the venues from the db */
+    // Geocoder
+    $adapter = new \Geocoder\HttpAdapter\BuzzHttpAdapter();
+    $geocoder = new \Geocoder\Geocoder();
+    $geocoder->registerProviders(array(
+        new \Geocoder\Provider\GoogleMapsProvider(
+            $adapter
+        )
+    ));
 
-    $url = 'http://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($location) . '&sensor=true';
-    $geo_data = file_get_contents($url);
-    $geo_data = json_decode($geo_data);
-
-    if ($geo_data) {
-        $lat = @$geo_data->results[0]->geometry->location->lat;
-        $lng = @$geo_data->results[0]->geometry->location->lng;
+    try {
+        $geocoded = $geocoder->geocode($location);
+    } catch (\Geocoder\Exception\NoResultException $e) {
+        // TODO: Error in right format
+        die('Could not geolocate location ' . $location . '. Error: ' . $e->getMessage());
     }
 
-    if ($geo_data->status == 'OK' && isset($lat) && isset($lng)){
-        // TODO: Limit should include page param
-        $limit_clause = $max_results ? sprintf('LIMIT 0, %d', addslashes($max_results)) : '';
-        $query = sprintf("
-            SELECT *, ( 3959 * acos( cos( radians(:lat) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(:lng) ) + sin( radians(:lat) ) * sin( radians( lat ) ) ) ) AS distance
-            FROM venues
-            HAVING distance < :radius
-            ORDER BY distance
-            %s
-            ",
-            $limit_clause
-        );
-    } else {
-        // TODO: Error
-    }
+    // TODO: Limit should include page param
+    $limit_clause = $max_results ? sprintf('LIMIT 0, %d', addslashes($max_results)) : '';
+    $query = sprintf("
+        SELECT *, ( 3959 * acos( cos( radians(:lat) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(:lng) ) + sin( radians(:lat) ) * sin( radians( lat ) ) ) ) AS distance
+        FROM venues
+        HAVING distance < :radius
+        ORDER BY distance
+        %s
+        ",
+        $limit_clause
+    );
 
     // $result   = mysql_query($query, $link) or die('Errant query:  '. mysql_error($link));
     $results = $db->executeQuery($query, array(
-        'lat' => $lat,
-        'lng' => $lng,
+        'lat' => $geocoded->getLatitude(),
+        'lng' => $geocoded->getLongitude(),
         'radius' => $radius
     ));
     $num_rows = $results->rowCount();
