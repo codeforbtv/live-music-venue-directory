@@ -29,13 +29,6 @@ function($, router, dispatcher, AppView) {
 		$(document).ajaxComplete(function() { dispatcher.trigger('ajax.complete'); });
 	};
 
-	App.prototype.search = function(criteria) {
-		var _this = this;
-		$.getJSON(this.options.search_url, criteria, function(data) {
-			_this.dispatcher.trigger('search.complete', data.results);
-		});
-	};
-
 	return new App();
 
 });
