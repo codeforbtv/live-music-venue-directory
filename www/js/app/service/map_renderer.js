@@ -7,6 +7,7 @@ define(['leaflet', 'app/event_dispatcher', 'app/map/data/counties.geo.json'], fu
 	var MapService = function(container) {
 		this.map = L.map(container);
 		this.markerGroup = L.featureGroup().addTo(this.map);
+		this.popupGroup = L.featureGroup().addTo(this.map).bringToFront();
 		this.markers = {};
 
 		// Set map view to vermont
@@ -62,20 +63,34 @@ define(['leaflet', 'app/event_dispatcher', 'app/map/data/counties.geo.json'], fu
 	// Add a venue to the map, with info popup
 	MapService.prototype.addVenue = function(venue) {
 		var marker = L.marker([venue.get('lat'), venue.get('lng')]),
+			detailOpen = false,
 			isOpen = false,
 			_this = this;
 		// TODO: Fix issue where clicking while hovered hides the popup for a second
 		marker.bindPopup(venue.get('business_name'));
 		marker.addEventListener({
 			mouseover: function(e) {
+				if (detailOpen) return false;
 				e.target.openPopup();
 				isOpen = true;
 			},
 			mouseout: function(e) {
 				e.target.closePopup();
 				isOpen = false;
+			},
+			click: function(e) {
+				var popup = L.popup({
+						offset: new L.Point(0, -30)
+					})
+					.setLatLng(new L.LatLng(venue.get('lat'), venue.get('lng')))
+					.setContent(['<h2>', venue.get('business_name'), '</h2><p>', venue.getFullAddress(), '<br />Phone: ', venue.get('phone'), '</p>'].join(''))
+				_this.popupGroup.clearLayers();
+				_this.popupGroup.addLayer(popup)
+				e.target.closePopup();
+				detailOpen = true;
 			}
 		});
+		this.map.on('popupclose', function(e) { console.log(e); detailOpen = false; });
 		// TODO: This should be moved out of the map renderer code into the map list
 		dispatcher.on('venue.hover', function(data) {
 			if (venue.get('id') == data.venue.get('id')) {
