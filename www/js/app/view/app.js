@@ -7,7 +7,7 @@ function(_, Backbone, dispatcher, tpl, VenueSearchFormView, VenueCollection, Ven
 		initialize: function(venue) {
 			this.render();
 			this.loadingMessage = this.$('#loading').hide();
-			dispatcher.on('search.complete', this.searchComplete, this);
+			dispatcher.on('search', this.search, this);
 			dispatcher.on('ajax.start', this.ajaxStart, this);
 			dispatcher.on('ajax.complete', this.ajaxComplete, this);
 		},
@@ -25,13 +25,23 @@ function(_, Backbone, dispatcher, tpl, VenueSearchFormView, VenueCollection, Ven
 		}
 	});
 
-	AppView.prototype.searchComplete = function(venues) {
-		if (venues.length) {
+	AppView.prototype.search = function(criteria) {
+		var _this = this;
+		var venueCollection = new VenueCollection();
+		venueCollection.fetch({
+			data: criteria,
+			success: function(collection) {
+				_this.searchComplete(collection);
+			}
+		});
+	};
+
+	AppView.prototype.searchComplete = function(collection) {
+		if (collection.length) {
 			this.$el.addClass('twocol');
-			var venueCollection = new VenueCollection(venues);
-			this.listView.collection = venueCollection;
+			this.listView.collection = collection;
 			this.listView.render();
-			this.mapView.collection = venueCollection;
+			this.mapView.collection = collection;
 			this.mapView.render();
 		} else {
 			alert('No venues match your search');
