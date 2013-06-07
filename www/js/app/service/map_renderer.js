@@ -90,7 +90,7 @@ define(['leaflet', 'app/event_dispatcher', 'app/map/data/counties.geo.json'], fu
 				detailOpen = true;
 			}
 		});
-		this.map.on('popupclose', function(e) { console.log(e); detailOpen = false; });
+		this.map.on('popupclose', function(e) { detailOpen = false; });
 		// TODO: This should be moved out of the map renderer code into the map list
 		dispatcher.on('venue.hover', function(data) {
 			if (venue.get('id') == data.venue.get('id')) {
