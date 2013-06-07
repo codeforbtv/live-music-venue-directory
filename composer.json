@@ -1,0 +1,13 @@
+{
+    "name": "codeforbtv/big-heavy-world-live-music-venue-directory",
+    "description": "Big Heavy World Live Music Venue Directory",
+    "authors": [
+        {
+            "name": "Ben Glassman",
+            "email": "bglassman@gmail.com"
+        }
+    ],
+    "require": {
+        "doctrine/dbal": "2.3.*"
+    }
+}
