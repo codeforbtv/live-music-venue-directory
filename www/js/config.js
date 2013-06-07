@@ -21,15 +21,15 @@ require.config({
         mirui: '../lib/miuri',
         leaflet: 'http://cdn.leafletjs.com/leaflet-0.5.1/leaflet'
     },
-	shim: {
-		leaflet: {
-			exports: 'L'
-		}
-	}
+    shim: {
+        leaflet: {
+            exports: 'L'
+        }
+    }
 });
 
 define('app_options', {
-	search_url: '/search_venues.php'
+    search_url: '/search_venues.php'
 });
 
 // Start loading the main app file. Put all of
