@@ -67,4 +67,48 @@ class SearchManager
         return $venues;
     }
 
+    public function findCounty($id)
+    {
+        // Load the county
+        $countiesIndex = $this->search->getIndex('counties');
+        $countyQuery = new \Elastica\Query\Ids('county', array($id));
+        $countyResults = $countiesIndex->search($countyQuery);
+        if ($countyResults->count()) {
+            $county = $countyResults->current();
+            return $countyData = $county->getData();
+        } else {
+            throw new \InvalidArgumentException($id . ' is not a valid county id');
+        }
+    }
+
+    protected function findVenuesInPolygon(array $polygon)
+    {
+        $query = new \Elastica\Query();
+        $geoPolygonFilter = new \Elastica\Filter\GeoPolygon('venue.location', $polygon);
+        $query->setFilter($geoPolygonFilter);
+        $query->setLimit(10000);
+
+        // Get result ids
+        $venuesIndex = $this->search->getIndex('venues');
+        $results = $venuesIndex->search($query);
+        $ids = array();
+        foreach ($results as $result) {
+            $ids[] = $result->getId();
+        }
+
+        // Load venues
+        $query = 'SELECT * FROM venues WHERE id IN(?)';
+        $results = $this->db->executeQuery($query,
+            array($ids),
+            array(\Doctrine\DBAL\Connection::PARAM_INT_ARRAY)
+        );
+
+        return $results->fetchAll();
+    }
+
+    public function findVenuesByCounty(array $county)
+    {
+        return $this->findVenuesInPolygon($county['shape']);
+    }
+
 }
