@@ -6,24 +6,24 @@ fieldset, a img { border: 0 solid transparent; }
 body { background-color: #5882FA; }
 /* #container { width: 960px; margin: 0 auto; } */
 #banner {
-	height: 160px;
-	width: 100%;
-	background-color: #ffffff;
-	position: relative;
+    height: 160px;
+    width: 100%;
+    background-color: #ffffff;
+    position: relative;
 }
 #banner #logo p { text-indent: -999em; }
 #banner h1 { position: absolute; left: 220px; top: 70px; font-size: 42px; }
 #banner #logo img { position: absolute; margin: 10px 0 10px 20px; }
 #banner #tagline { position: absolute; left: 10px; top: 130px; font-size: 20px; font-weight: bold; }
 #footer {
-	clear: both;
-	width: auto;
-	height: 25px;
-	padding: 10px;
-	background-color: #E6E6E6;
-	-webkit-border-radius: 0px 0px 20px 20px;
-	border-radius: 0px 0px 20px 20px;
-	text-align: center;
+    clear: both;
+    width: auto;
+    height: 25px;
+    padding: 10px;
+    background-color: #E6E6E6;
+    -webkit-border-radius: 0px 0px 20px 20px;
+    border-radius: 0px 0px 20px 20px;
+    text-align: center;
 }
 
 /* Search Form */
