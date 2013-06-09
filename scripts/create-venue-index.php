@@ -32,13 +32,13 @@ $mapping->send();
 $venues = $db->fetchAll('SELECT * FROM venues');
 $venueDocuments = array();
 foreach ($venues as $venue) {
-	$venue = array(
-		'id'      => $venue['id'],
-		'name'    => $venue['business_name'],
-		'location'=> array('lat' => $venue['lat'], 'lon' => $venue['lng'])
-	);
-	// First parameter is the id of document.
-	$venueDocuments[] = new \Elastica\Document($venue['id'], $venue);
+    $venue = array(
+        'id'      => $venue['id'],
+        'name'    => $venue['business_name'],
+        'location'=> array('lat' => $venue['lat'], 'lon' => $venue['lng'])
+    );
+    // First parameter is the id of document.
+    $venueDocuments[] = new \Elastica\Document($venue['id'], $venue);
 
 }
 // Add venue to type

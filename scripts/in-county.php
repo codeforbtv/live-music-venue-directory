@@ -34,13 +34,13 @@ $elasticaResultSet    = $elasticaIndex->search($elasticaQuery);
 // Get result ids
 $ids = array();
 foreach ($elasticaResultSet as $result) {
-	$ids[] = $result->getId();
+    $ids[] = $result->getId();
 }
 
 // Load venues
 $query = 'SELECT * FROM venues WHERE id IN(?)';
 $results = $db->executeQuery($query,
-	array($ids),
+    array($ids),
     array(\Doctrine\DBAL\Connection::PARAM_INT_ARRAY)
 );
 
@@ -51,5 +51,5 @@ echo sprintf("Venues in %s County\n", $countyData['county']);
 echo str_repeat('=', 10);
 echo "\n";
 while($venue = $results->fetch()) {
-	echo $venue['business_name'] . "\n";
+    echo $venue['business_name'] . "\n";
 }
