@@ -50,13 +50,11 @@ class SearchManager
         }
 
         // Load venues
-        $query = 'SELECT * FROM venues WHERE id IN(?)';
-        $results = $this->db->executeQuery($query, array($ids), array(\Doctrine\DBAL\Connection::PARAM_INT_ARRAY));
-        $venues = array();
-        while ($venue = $results->fetch()) {
+        $venues = $this->findVenuesByIds($ids);
+        foreach ($venues as &$venue) {
             $venue['distance'] = $distanceMap[$venue['id']];
-            $venues[] = $venue;
         }
+        unset($venue);
 
         // Sort by distance again since we lost sort order
         usort($venues, function($a, $b) {
@@ -97,13 +95,15 @@ class SearchManager
         }
 
         // Load venues
-        $query = 'SELECT * FROM venues WHERE id IN(?)';
-        $results = $this->db->executeQuery($query,
+        return $this->findVenuesByIds($ids);
+    }
+
+    protected function findVenuesByIds(array $ids)
+    {
+        return $this->db->executeQuery('SELECT * FROM venues WHERE id IN(?)',
             array($ids),
             array(\Doctrine\DBAL\Connection::PARAM_INT_ARRAY)
-        );
-
-        return $results->fetchAll();
+        )->fetchAll();
     }
 
     public function findVenuesByCounty(array $county)
