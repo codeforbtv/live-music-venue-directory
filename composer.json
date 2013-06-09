@@ -10,6 +10,7 @@
     "require": {
         "doctrine/dbal": "2.3.*",
         "willdurand/geocoder": "1.7.0",
-        "kriswallsmith/buzz": "v0.10"
+        "kriswallsmith/buzz": "v0.10",
+        "ruflin/elastica": "0.20.5.*@dev"
     }
 }
