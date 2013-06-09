@@ -7,19 +7,23 @@ function($, Backbone, _, dispatcher, MapRenderer) {
 			_.bindAll(this, 'render');
 			this.map = new MapRenderer(this.el);
 			// TODO: Implement this user a layer control in the map renderer;
-			this.btnReset = $('<button id="btn-map-reset">Back to State View</button>').prependTo(this.$el);
+			this.btnReset = $('<button id="btn-counties-toggle">Counties Off</button>').prependTo(this.$el);
 			this.render(this.collection);
+			dispatcher.on('county.focus', function(county) {
+				this.btnReset.text('Counties On');
+			}, this);
 		},
 		events: {
-			'click #btn-map-reset': 'reset'
+			'click #btn-counties-toggle': 'toggleCounties'
 		},
 		render: function() {
 			if (!this.collection) return false;
 
 			this.map.displayVenues(this.collection.models);
 		},
-		reset: function() {
-			this.map.reset();
+		toggleCounties: function() {
+			this.map.toggleCounties();
+			this.btnReset.text(this.map.countiesVisible ? 'Counties Off' : 'Counties On');
 		}
 	});
 

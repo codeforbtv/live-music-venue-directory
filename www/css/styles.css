@@ -32,7 +32,7 @@ body { background-color: #5882FA; }
 
 /* Map */
 #search-map { width: 100%; height: 600px; padding: 0; background-color: #E6E6E6; margin-bottom: 2px; }
-#btn-map-reset { position: absolute; top: 0; right: 0; z-index: 2000; }
+#btn-counties-toggle { position: absolute; top: 0; right: 0; z-index: 2000; }
 
 /* List */
 #search-list { display: none; width: 100%; height: 600px; padding: 0 0.5%; background-color: #D0D0D0; margin-bottom: 2px; overflow: auto; }
