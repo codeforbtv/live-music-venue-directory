@@ -6,7 +6,7 @@ $db = require __DIR__ . '/../app/config/database.php';
 
 $location = isset($argv[1]) ? $argv[1] : null;
 if (!$location) die('Please provide a location');
-$radius = isset($argv[2]) ? (int) $argv[2] : 25;
+$radius = isset($argv[2]) ? (float) $argv[2] : 25;
 
 // Geocode location
 $geocoder = new \Geocoder\Geocoder();
