@@ -2,3 +2,4 @@ app/config/parameters.php
 .root-dir
 
 vendor
+logs
