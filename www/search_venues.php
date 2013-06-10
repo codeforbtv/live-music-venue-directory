@@ -7,7 +7,7 @@ $db = require __DIR__ . '/../app/config/database.php';
 $location = isset($_GET['location']) ? $_GET['location'] : null;
 $county_id = isset($_GET['county_id']) ? $_GET['county_id'] : null;
 $max_results = isset($_GET['max_results']) ? $_GET['max_results'] : 10;
-$radius = isset($_GET['radius']) ? $_GET['radius'] : 25;
+$radius = isset($_GET['radius']) && !empty($_GET['radius']) ? (int) $_GET['radius'] : 25;
 $format = strtolower($_GET['format']) == 'xml' ? 'xml' : 'json';
 
 if (!$location && !$county_id) {
