@@ -1,4 +1,4 @@
-define(['leaflet', 'app/event_dispatcher', 'app/map/data/counties.geo.json'], function(L, dispatcher, counties_geo_json) {
+define(['leaflet', 'app/event_dispatcher', 'app/map/data/counties.geo.json.elastic'], function(L, dispatcher, counties_geo_json) {
 
     var apiKey = '6ded93aafce14dbeaf33173762046262';
 
@@ -48,32 +48,34 @@ define(['leaflet', 'app/event_dispatcher', 'app/map/data/counties.geo.json'], fu
         // County GeoJSON
         this.hideCounties();
         for (x in this.counties) {
-            this.addCounty(L.geoJson(this.counties[x]));
+            this.addCounty(this.counties[x]);
         }
         this.countiesVisible = true;
     };
 
     MapService.prototype.addCounty = function(county) {
         var _this = this;
-        county.on('click', function(e) {
+        var countyLayer = L.geoJson(county);
+        countyLayer.on('click', function(e) {
             this.hideCounties();
-            this.focusCounty(county);
+            this.focusCounty(county, countyLayer);
         }, this);
-        this.countyGroup.addLayer(county);
+        this.countyGroup.addLayer(countyLayer);
     };
 
-    MapService.prototype.focusCounty = function(county) {
+    MapService.prototype.focusCounty = function(county, layer) {
         // TODO: Should load a search for items within the bounds
-        county.setStyle({
+        if (this.currentCountyLayer) this.map.removeLayer(this.currentCountyLayer);
+        layer.setStyle({
             fillOpacity: 0
         });
-        county.on('click', function(e) {
-            this.map.fitBounds(county.getBounds());
-        }, this);
-        this.countyGroup.addLayer(county);
-        this.map.fitBounds(county.getBounds());
+        layer.off('click');
+        this.currentCountyLayer = layer;
+        layer.addTo(this.map);
+        // this.countyGroup.addLayer(layer);
+        this.map.fitBounds(layer.getBounds());
         this.countiesVisible = false;
-        dispatcher.trigger('county.focus');
+        dispatcher.trigger('county.focus', county.features[0].properties);
     };
 
     MapService.prototype.hideCounties = function() {
@@ -93,7 +95,7 @@ define(['leaflet', 'app/event_dispatcher', 'app/map/data/counties.geo.json'], fu
     };
 
     // Display venues on the map
-    MapService.prototype.displayVenues = function(venues) {
+    MapService.prototype.displayVenues = function(venues, options) {
         this.clearMarkers();
         this.hideCounties();
         for (x in venues) {
