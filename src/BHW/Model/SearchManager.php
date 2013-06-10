@@ -111,4 +111,10 @@ class SearchManager
         return $this->findVenuesInPolygon($county['shape']);
     }
 
+    public function findCounties()
+    {
+        $countiesIndex = $this->search->getIndex('counties');
+        return $countiesIndex->search('', 10000);
+    }
+
 }
