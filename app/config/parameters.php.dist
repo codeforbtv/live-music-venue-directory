@@ -5,7 +5,8 @@ $parameters = array(
 		'host'     => 'localhost',
 		'user'     => 'bigheavyworld',
 		'password' => '',
-		'database' => 'bigheavyworld'
+		'dbname'   => 'bigheavyworld',
+		'driver'   => 'pdo_mysql'
 	)
 );
 
