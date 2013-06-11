@@ -14,34 +14,48 @@ Setup Instructions
 
 1. Install php curl extension
 
-	sudo apt-get install php5-curl
+```bash
+sudo apt-get install php5-curl
+```
 
 2. Install php mysql extension for mysql/pdo support
 
-	sudo apt-get install php5-mysql
+```bash
+sudo apt-get install php5-mysql
+```
 
 3. Create a database and then create paramters.php from dist, filling in db info
 
-	cp app/config/parameters.php.dist app/config/parameters.php
-	vi app/config/parameters.php
+```bash
+cp app/config/parameters.php.dist app/config/parameters.php
+vi app/config/parameters.php
+```
 
 4. Import venue data
 
-	mysql bigheavyworld -u root -p < sql/venues_data.sql 
+```bash
+mysql bigheavyworld -u root -p < sql/venues_data.sql 
+```
 
 5. Install composer and use it to install third party libraries 
 
-	curl -sS https://getcomposer.org/installer | php
-	php composer.phar install
+```bash
+curl -sS https://getcomposer.org/installer | php
+php composer.phar install
+```
 
 6. Install elastic search, this should be configured as a service so it always runs on startup
 
-	sudo dpkg -i elasticsearch-0.90.1.deb 
+```bash
+sudo dpkg -i elasticsearch-0.90.1.deb 
+```
 
 7. Create county and venue search indexes (elasticsearch must be running)
 
-	php scripts/create-county-index.php 
-	php scripts/create-venue-index.php 
+```bash
+php scripts/create-county-index.php 
+php scripts/create-venue-index.php 
+```
 
 8. Other
 
