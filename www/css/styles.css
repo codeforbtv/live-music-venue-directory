@@ -47,4 +47,5 @@ body { background-color: #5882FA; }
 body { font-family: "Trebuchet MS", "Helvetica Neu", Helvetica, Arial, sans-serif; }
 
 /* Forms */
-form input[type=submit] { margin: 0; padding: 0; height: 30px; width: 60px; }
+input[type=text] { margin: 0; padding: 0; height: 1.5em; width: 300px; padding: 5px; }
+

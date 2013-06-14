@@ -5,13 +5,17 @@ require __DIR__ . '/../vendor/autoload.php';
 $db = require __DIR__ . '/../app/config/database.php';
 
 $location = isset($_GET['location']) ? $_GET['location'] : null;
+$county_id = isset($_GET['county_id']) ? $_GET['county_id'] : null;
 $max_results = isset($_GET['max_results']) ? $_GET['max_results'] : 10;
-$radius = isset($_GET['radius']) ? $_GET['radius'] : 25;
+$radius = isset($_GET['radius']) && !empty($_GET['radius']) ? (int) $_GET['radius'] : 25;
 $format = strtolower($_GET['format']) == 'xml' ? 'xml' : 'json';
 
-if (!$location) {
-    die('Please supply a location.');
+if (!$location && !$county_id) {
+    die('Please supply a location or county id.');
 }
+
+$elasticaClient = new \Elastica\Client();
+$searchManager = new BHW\Model\SearchManager($db, $elasticaClient);
 
 if ($location) {
 
@@ -23,86 +27,68 @@ if ($location) {
         }
     }
 
-    // Geocoder
-    $adapter = new \Geocoder\HttpAdapter\BuzzHttpAdapter();
+    // Geocode location
     $geocoder = new \Geocoder\Geocoder();
     $geocoder->registerProviders(array(
         new \Geocoder\Provider\GoogleMapsProvider(
-            $adapter
+            new \Geocoder\HttpAdapter\BuzzHttpAdapter()
         )
     ));
 
     try {
         $geocoded = $geocoder->geocode($location);
     } catch (\Geocoder\Exception\NoResultException $e) {
-        // TODO: Error in right format
         die('Could not geolocate location ' . $location . '. Error: ' . $e->getMessage());
     }
 
-    // TODO: Limit should include page param
-    $limit_clause = $max_results ? sprintf('LIMIT 0, %d', addslashes($max_results)) : '';
-    $query = sprintf("
-        SELECT *, ( 3959 * acos( cos( radians(:lat) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(:lng) ) + sin( radians(:lat) ) * sin( radians( lat ) ) ) ) AS distance
-        FROM venues
-        HAVING distance < :radius
-        ORDER BY distance
-        %s
-        ",
-        $limit_clause
-    );
+    $results = $searchManager->findVenuesByDistance($geocoded->getLatitude(), $geocoded->getLongitude(), $radius);
 
-    // $result   = mysql_query($query, $link) or die('Errant query:  '. mysql_error($link));
-    $results = $db->executeQuery($query, array(
-        'lat' => $geocoded->getLatitude(),
-        'lng' => $geocoded->getLongitude(),
-        'radius' => $radius
-    ));
-    $num_rows = $results->rowCount();
+} else if ($county_id) {
 
-    /* create one master array of the records */
-    $venues = array();
+    $county = $searchManager->findCounty($county_id);
+    $results = $searchManager->findVenuesByCounty($county);
 
-    // Build a mold for our returned object
-    $venues['max_results'] = $max_results;
-    $venues['total_results'] = $num_rows;
-    $venues['location']  = ucfirst($location);
-    $venues['results']  = array();
+}
 
-    while($venue = $results->fetch()) {
-        $venues['results'][] = $venue;
-    }
+/* create one master array of the records */
+$venues = array();
 
-    /***************************************/
-    # Used for debugging
-    //print_r($venues);
-    /***************************************/
+// Build a mold for our returned object
+$venues['max_results'] = $max_results;
+$venues['total_results'] = count($results);
+$venues['location']  = ucfirst($location);
+$venues['results'] = $results;
 
-    /* output in necessary format */
-    if($format == 'json') {
-        header('Content-type: application/json');
-        echo json_encode($venues);
-    } else {
-        header('Content-type: text/xml');
-        echo '<results>';
-        foreach($venues as $index => $venue) {
-            if(is_array($venue)) {
-                foreach($venue as $key => $value) {
-                    echo '<',$key,'>';
-                    if(is_array($value)) {
-                        foreach($value as $tag => $val) {
-                            echo '<',$tag,'>',htmlentities($val),'</',$tag,'>';
-                        }
+/***************************************/
+# Used for debugging
+//print_r($venues);
+/***************************************/
+
+/* output in necessary format */
+if($format == 'json') {
+    header('Content-type: application/json');
+    echo json_encode($venues);
+} else {
+    header('Content-type: text/xml');
+    echo '<results>';
+    foreach($venues as $index => $venue) {
+        if(is_array($venue)) {
+            foreach($venue as $key => $value) {
+                echo '<',$key,'>';
+                if(is_array($value)) {
+                    foreach($value as $tag => $val) {
+                        echo '<',$tag,'>',htmlentities($val),'</',$tag,'>';
                     }
-                    echo '</',$key,'>';
                 }
+                echo '</',$key,'>';
             }
         }
-        echo '</results>';
     }
-
-    /* disconnect from the db */
-    $db->close();
+    echo '</results>';
 }
+
+/* disconnect from the db */
+$db->close();
 
 // Note: doesnt accept non 5 digit zip codes;
 function is_zip_code($text)

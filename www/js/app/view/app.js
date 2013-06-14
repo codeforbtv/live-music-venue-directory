@@ -27,24 +27,24 @@ function(_, Backbone, dispatcher, tpl, VenueSearchFormView, VenueCollection, Ven
         }
     });
 
-    AppView.prototype.search = function(criteria) {
+    AppView.prototype.search = function(criteria, options) {
         var _this = this;
         var venueCollection = new VenueCollection();
         venueCollection.fetch({
             data: criteria,
             success: function(collection) {
-                _this.searchComplete(collection);
+                _this.searchComplete(collection, options);
             }
         });
     };
 
-    AppView.prototype.searchComplete = function(collection) {
+    AppView.prototype.searchComplete = function(collection, options) {
         if (collection.length) {
             this.$el.addClass('twocol');
             this.listView.collection = collection;
-            this.listView.render();
+            this.listView.render(options);
             this.mapView.collection = collection;
-            this.mapView.render();
+            this.mapView.render(options);
         } else {
             alert('No venues match your search');
         }

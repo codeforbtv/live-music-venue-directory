@@ -12,5 +12,10 @@
         "willdurand/geocoder": "1.7.0",
         "kriswallsmith/buzz": "v0.10",
         "ruflin/elastica": "0.20.5.*@dev"
-    }
+    },
+	"autoload": {
+		"psr-0": {
+			"": "src"
+		}
+	}
 }
