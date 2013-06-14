@@ -69,7 +69,7 @@ class SearchManager
     {
         // Load the county
         $countiesIndex = $this->search->getIndex('counties');
-        $countyQuery = new \Elastica\Query\Ids('county', array($id));
+        $countyQuery = new \Elastica\Filter\Ids('county', array($id));
         $countyResults = $countiesIndex->search($countyQuery);
         if ($countyResults->count()) {
             $county = $countyResults->current();
