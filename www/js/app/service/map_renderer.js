@@ -30,7 +30,7 @@ define(['underscore', 'leaflet', 'app/event_dispatcher', 'app/map/data/counties.
     MapService.prototype.getDefaults = function() {
         return {
             popup_options: {
-                offset: new L.Point(0, -36)
+                offset: new L.Point(0, -33)
             }
         };
     };
