@@ -1,15 +1,21 @@
-define(['leaflet', 'app/event_dispatcher', 'app/map/data/counties.geo.json.elastic'], function(L, dispatcher, counties_geo_json) {
+define(['underscore', 'leaflet', 'app/event_dispatcher', 'app/map/data/counties.geo.json.elastic'], function(_, L, dispatcher, counties_geo_json) {
 
-    var apiKey = '6ded93aafce14dbeaf33173762046262';
+    var apiKey = '6ded93aafce14dbeaf33173762046262',
+        extend = _.extend,
+        isEmpty = _.isEmpty;
 
     // MapService
     // Author: Ben Glassman <bglassman@gmail.com>
-    var MapService = function(container) {
+    var MapService = function(container, options) {
+        var options = options || {};
+        this.options = !isEmpty(options) ? extend(options, this.getDefaults()) : this.getDefaults();
+
         this.map = L.map(container);
         this.markerGroup = L.featureGroup().addTo(this.map);
         this.popupGroup = L.featureGroup().addTo(this.map).bringToFront();
         this.countyGroup = L.featureGroup().addTo(this.map).bringToBack();
         this.markers = {};
+        console.log(this.options);
 
         // Set map view to vermont
         this.setDefaultView();
@@ -19,6 +25,14 @@ define(['leaflet', 'app/event_dispatcher', 'app/map/data/counties.geo.json.elast
         }).addTo(this.map);
 
         this.showCounties();
+    };
+
+    MapService.prototype.getDefaults = function() {
+        return {
+            popup_options: {
+                offset: new L.Point(0, -36)
+            }
+        };
     };
 
     MapService.prototype.counties = counties_geo_json;
@@ -111,7 +125,7 @@ define(['leaflet', 'app/event_dispatcher', 'app/map/data/counties.geo.json.elast
             isOpen = false,
             _this = this;
         // TODO: Fix issue where clicking while hovered hides the popup for a second
-        marker.bindPopup(venue.get('business_name'));
+        marker.bindPopup(venue.get('business_name'), this.options.popup_options);
         marker.on({
             mouseover: function(e) {
                 if (detailOpen) return false;
