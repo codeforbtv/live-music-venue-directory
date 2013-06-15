@@ -74,6 +74,10 @@ define(['underscore', 'leaflet', 'app/event_dispatcher', 'app/map/data/counties.
             this.hideCounties();
             this.focusCounty(county, countyLayer);
         }, this);
+		countyLayer.setStyle({
+			'weight': 3,
+			'opacity': 1
+		});
         this.countyGroup.addLayer(countyLayer);
     };
 
