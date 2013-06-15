@@ -8,7 +8,6 @@ $location = isset($_GET['location']) ? $_GET['location'] : null;
 $county_id = isset($_GET['county_id']) ? $_GET['county_id'] : null;
 $max_results = isset($_GET['max_results']) ? $_GET['max_results'] : 10;
 $radius = isset($_GET['radius']) && !empty($_GET['radius']) ? (int) $_GET['radius'] : 25;
-$format = strtolower($_GET['format']) == 'xml' ? 'xml' : 'json';
 
 if (!$location && !$county_id) {
     die('Please supply a location or county id.');
@@ -59,35 +58,10 @@ $venues['total_results'] = count($results);
 $venues['location']  = ucfirst($location);
 $venues['results'] = $results;
 
-/***************************************/
-# Used for debugging
-//print_r($venues);
-/***************************************/
+// Output
+header('Content-type: application/json');
+echo json_encode($venues);
 
-/* output in necessary format */
-if($format == 'json') {
-    header('Content-type: application/json');
-    echo json_encode($venues);
-} else {
-    header('Content-type: text/xml');
-    echo '<results>';
-    foreach($venues as $index => $venue) {
-        if(is_array($venue)) {
-            foreach($venue as $key => $value) {
-                echo '<',$key,'>';
-                if(is_array($value)) {
-                    foreach($value as $tag => $val) {
-                        echo '<',$tag,'>',htmlentities($val),'</',$tag,'>';
-                    }
-                }
-                echo '</',$key,'>';
-            }
-        }
-    }
-    echo '</results>';
-}
-
-/* disconnect from the db */
 $db->close();
 
 // Note: doesnt accept non 5 digit zip codes;
