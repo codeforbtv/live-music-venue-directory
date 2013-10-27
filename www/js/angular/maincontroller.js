@@ -2,6 +2,7 @@ app.controller('MainController', function($scope, $http, map) {
     $scope.searchText = null;
     $scope.venues = [];
     $scope.loading = false;
+    $scope.currentVenue = null;
     $scope.submitSearch = function() {
         $scope.loading = true;
         $http.get(
@@ -25,8 +26,20 @@ app.controller('MainController', function($scope, $http, map) {
         console.log('lets go map');
     };
 
+    $scope.venueHover = function(venue, e) {
+        map.getMarkerByVenueId(venue.id).openPopup();
+    };
+
+    $scope.venueClick = function(venue, e) {
+        $scope.currentVenue = venue;
+    };
+
     function addVenue(venue) {
         $scope.venues.push(venue);
+    };
+
+    function displayCurrentVenue(venue) {
+        map.displayVenue(venue);
     };
 
     // Initialize the map
@@ -36,5 +49,13 @@ app.controller('MainController', function($scope, $http, map) {
             return false;
         }
         map.displayVenues(venues);
+    });
+
+    // Initialize the map
+    $scope.$watch('currentVenue', function(venue) {
+        if (venue === null) {
+            return false;
+        }
+        displayCurrentVenue(venue);
     });
 });
