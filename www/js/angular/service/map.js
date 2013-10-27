@@ -5,11 +5,15 @@ app.factory('map', function() {
 
     // MapService
     // Author: Ben Glassman <bglassman@gmail.com>
-    var MapService = function(container, options) {
+    var MapService = function(container) {
+        this.container = container;
+    };
+
+    MapService.prototype.init = function(options) {
         var options = options || {};
         this.options = !isEmpty(options) ? extend(options, this.getDefaults()) : this.getDefaults();
 
-        this.map = L.map(container);
+        this.map = L.map(this.container);
         this.markerGroup = L.featureGroup().addTo(this.map);
         this.popupGroup = L.featureGroup().addTo(this.map).bringToFront();
         this.markers = {};
@@ -20,8 +24,7 @@ app.factory('map', function() {
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
             maxZoom: 18
         }).addTo(this.map);
-
-    };
+    }
 
     MapService.prototype.getDefaults = function() {
         return {

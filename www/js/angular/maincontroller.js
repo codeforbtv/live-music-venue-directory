@@ -23,7 +23,7 @@ app.controller('MainController', function($scope, $http, map) {
     };
 
     $scope.initMap = function() {
-        console.log('lets go map');
+        map.init();
     };
 
     $scope.venueHover = function(venue, e) {
