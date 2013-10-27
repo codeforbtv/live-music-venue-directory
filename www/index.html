@@ -14,11 +14,30 @@
 				<p id="tagline">Big Heavy World</p>
 				<h1>Vermont Music Venue Search</h1>
 			</div>
-			<div id="app"></div>
-			<div id="footer">
-				<p>Partially designed/built by a seemingly random conglomerate of skilled people.</p>
-			</div>
+            <div id="app" ng-app="DirectoryApp" ng-controller="MainController" ng-class="{ twocol: venues.length > 0 }">
+                <form id="search-form" ng-submit="submitSearch()"> 
+                    <input type="text" ng-model="searchText" />
+                    <button type="submit">GO</button>
+                </form>
+                <div ng-show="loading">Loading...</div>
+                <div id="search-map" ng-controller="initMap"></div>
+                <div id="search-list" ng-hide="venues.length == 0">
+                    <ul>
+                        <li class="venue" ng-repeat="venue in venues" data-id="{{venue.id}}">
+                            <h2 class="name"><a href="#" title="View Details">{{venue.business_name}}</a></h2>
+                            <p class="address">Some address</p>
+                            <p class="phone">{{venue.phone}}</p>
+                            <p class="email"><a href="mailto:{{email}}">{{venue.email}}</a></p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
 		</div>
-        <script data-main="js/config" src="js/lib/require.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js" type="text/javascript"></script>
+        <script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js" type="text/javascript"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js
+" type="text/javascript"></script>
+        <script src="/js/angular/app.js" type="text/javascript"></script>
+        <script src="/js/angular/maincontroller.js" type="text/javascript"></script>
     </body>
 </html>
