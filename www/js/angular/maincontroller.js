@@ -51,7 +51,7 @@ app.controller('MainController', function($scope, $http, map) {
         map.displayVenues(venues);
     });
 
-    // Initialize the map
+    // Display the current venue on map
     $scope.$watch('currentVenue', function(venue) {
         if (venue === null) {
             return false;
