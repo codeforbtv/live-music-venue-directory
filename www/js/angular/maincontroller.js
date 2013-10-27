@@ -39,7 +39,7 @@ app.controller('MainController', function($scope, $http, map) {
     };
 
     function displayCurrentVenue(venue) {
-        map.displayVenue(venue);
+        map.displayVenueDetail(venue);
     };
 
     // Initialize the map

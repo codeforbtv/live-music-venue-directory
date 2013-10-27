@@ -7,6 +7,8 @@ app.factory('map', function() {
     // Author: Ben Glassman <bglassman@gmail.com>
     var MapService = function(container) {
         this.container = container;
+        this.currentVenue = null;
+        this.venueSummaryTimeout = null;
     };
 
     MapService.prototype.init = function(options) {
@@ -41,6 +43,7 @@ app.factory('map', function() {
     MapService.prototype.reset = function() {
         this.setDefaultView();
         this.clearMarkers();
+        this.currentVenue = null;
     };
 
     // Display venues on the map
@@ -55,58 +58,51 @@ app.factory('map', function() {
     // Add a venue to the map, with info popup
     MapService.prototype.addVenue = function(venue) {
         var marker = L.marker([venue.lat, venue.lng]),
-            detailOpen = false,
-            isOpen = false,
             _this = this;
-        // TODO: Fix issue where clicking while hovered hides the popup for a second
         marker.bindPopup(venue.business_name, this.options.popup_options);
         marker.on({
             mouseover: function(e) {
-                if (detailOpen) return false;
-                e.target.openPopup();
-                isOpen = true;
+                clearTimeout(_this.venueSummaryTimeout);
+                _this.venueSummaryTimeout = setTimeout(function() {
+                    _this.showVenueSummary(venue);
+                }, 250);
             },
             mouseout: function(e) {
-                e.target.closePopup();
-                isOpen = false;
+                clearTimeout(_this.venueSummaryTimeout);
+                _this.venueSummaryTimeout = setTimeout(function() {
+                    _this.hideVenueSummary(venue);
+                }, 250);
             },
             click: function(e) {
-                _this.displayVenue(venue);
+                _this.displayVenueDetail(venue);
             }
         });
-        this.map.on('popupclose', function(e) { detailOpen = false; });
-        // TODO: This should be moved out of the map renderer code into the map list
-        // dispatcher.on('venue.hover', function(data) {
-        //     if (venue.id == data.venue.get('id')) {
-        //         switch (data.event.type) {
-        //             case 'mouseenter':
-        //                 if (!isOpen) {
-        //                     marker.openPopup();
-        //                     isOpen = true;
-        //                 }
-        //                 break;
-        //             case 'mouseleave':
-        //                 marker.closePopup();
-        //                 isOpen = false;
-        //                 break;
-        //         }
-        //     }
-        // });
-
         this.markerGroup.addLayer(marker);
         this.markers[venue.id] = marker;
 
         return marker;
     };
 
-    MapService.prototype.displayVenue = function(venue) {
+    MapService.prototype.displayVenueDetail = function(venue) {
         var popup = L.popup({
                 offset: new L.Point(0, -30)
             })
             .setLatLng(new L.LatLng(venue.lat, venue.lng))
             .setContent(['<h2>', venue.business_name, '</h2><p>', 'Some address', '<br />Phone: ', venue.phone, '</p>'].join(''))
+        this.hideVenueSummary(venue);
         this.popupGroup.clearLayers();
         this.popupGroup.addLayer(popup)
+        this.currentVenue = venue;
+    }
+
+    MapService.prototype.showVenueSummary = function(venue) {
+        if (this.currentVenue !== null && this.currentVenue.id == venue.id) {
+            return false;
+        }
+        this.getMarkerByVenueId(venue.id).openPopup();
+    }
+
+    MapService.prototype.hideVenueSummary = function(venue) {
         this.getMarkerByVenueId(venue.id).closePopup();
     }
 
