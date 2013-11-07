@@ -8,9 +8,10 @@ $location = isset($_GET['location']) ? $_GET['location'] : null;
 $county_id = isset($_GET['county_id']) ? $_GET['county_id'] : null;
 $max_results = isset($_GET['max_results']) ? $_GET['max_results'] : 10;
 $radius = isset($_GET['radius']) && !empty($_GET['radius']) ? (int) $_GET['radius'] : 25;
+$bounds = isset($_POST['bounds']) && !empty($_POST['bounds']) ? json_decode($_POST['bounds'], true) : null;
 
-if (!$location && !$county_id) {
-    die('Please supply a location or county id.');
+if (empty($location) && empty($county_id) && empty($bounds)) {
+    die('Please supply a location, county id or bounds.');
 }
 
 $elasticaClient = new \Elastica\Client();
@@ -46,6 +47,17 @@ if ($location) {
 
     $county = $searchManager->findCounty($county_id);
     $results = $searchManager->findVenuesByCounty($county);
+
+} else if ($bounds) {
+
+    $results = $searchManager->findVenuesInPolygon(array_map(function($lonLatTuple) {
+            return array(
+                'lon' => $lonLatTuple[0],
+                'lat' => $lonLatTuple[1]
+            );
+        }, 
+        array_shift($bounds['geometry']['coordinates'])
+    ));
 
 }
 

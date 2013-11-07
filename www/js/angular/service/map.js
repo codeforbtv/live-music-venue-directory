@@ -1,4 +1,4 @@
-app.factory('map', function() {
+app.factory('map', function($http) {
     var apiKey = '6ded93aafce14dbeaf33173762046262',
         extend = _.extend,
         isEmpty = _.isEmpty;
@@ -53,6 +53,7 @@ app.factory('map', function() {
         this.options = !isEmpty(options) ? extend(options, this.getDefaults()) : this.getDefaults();
 
         this.map = L.map(this.container);
+
         this.markerGroup = L.featureGroup().addTo(this.map);
 
         this.venueDetailsPopupManager = new MapPopupGroupManager(this.map, {
@@ -69,6 +70,48 @@ app.factory('map', function() {
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
             maxZoom: 18
         }).addTo(this.map);
+
+        this.initDrawingControls();
+    }
+
+    MapService.prototype.initDrawingControls = function() {
+        var _this = this;
+
+        // Initialize the FeatureGroup to store editable layers
+        var drawnItems = new L.FeatureGroup();
+        this.map.addLayer(drawnItems);
+
+        // Initialize the draw control and pass it the FeatureGroup of editable layers
+        var drawControl = new L.Control.Draw({
+            draw: {
+                position: 'topleft'
+            },
+            edit: {
+                featureGroup: drawnItems
+            }
+        });
+        this.map.addControl(drawControl);
+
+        this.map.on('draw:created', function (e) {
+            drawnItems.clearLayers();
+
+            var type = e.layerType,
+                layer = e.layer;
+
+            if (type === 'marker') {
+                layer.bindPopup('A popup!');
+            }
+
+            drawnItems.addLayer(layer);
+
+            $http
+                .post('/search_venues.php', {
+                    bounds: JSON.stringify(layer.toGeoJSON())
+                })
+                .success(function(data) {
+                    _this.displayVenues(data.results);
+                });
+        });
     }
 
     MapService.prototype.getDefaults = function() {

@@ -79,7 +79,7 @@ class SearchManager
         }
     }
 
-    protected function findVenuesInPolygon(array $polygon)
+    public function findVenuesInPolygon(array $polygon)
     {
         $query = new \Elastica\Query();
         $geoPolygonFilter = new \Elastica\Filter\GeoPolygon('venue.location', $polygon);
