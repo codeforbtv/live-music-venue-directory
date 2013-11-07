@@ -27,7 +27,11 @@ app.controller('MainController', function($scope, $http, map) {
     };
 
     $scope.venueHover = function(venue, e) {
-        map.showVenueSummary(venue);
+        if (e.type === 'mouseover') {
+            map.showVenueSummary(venue);
+        } else {
+            map.hideVenueSummary(venue);
+        }
     };
 
     $scope.venueClick = function(venue, e) {
