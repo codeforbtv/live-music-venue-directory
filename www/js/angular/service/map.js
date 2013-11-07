@@ -3,14 +3,49 @@ app.factory('map', function() {
         extend = _.extend,
         isEmpty = _.isEmpty;
 
+    // Manage grouped popups where only one can be open at a time
+    var MapPopupGroupManager = function(map, options) {
+        var options = options || {};
+        this.map = map;
+        if ( ! options.group) {
+            throw new Error('Please specify options.group');
+        }
+        this.group = options.group;
+    };
+
+    MapPopupGroupManager.prototype = {
+        currentPopup: null,
+        openPopup: function(popup) {
+            if (this.currentPopup) {
+                this.closeCurrentPopup();
+            }
+
+            this.currentPopup = popup;
+
+            this.group.addLayer(popup);
+        },
+        closePopup: function(popup) {
+            this.group.removeLayer(popup);
+
+            if (this.currentPopup === popup) {
+                this.currentPopup = null;
+            }
+        },
+        closeCurrentPopup: function() {
+            if ( ! this.currentPopup) {
+                return;
+            }
+
+            this.closePopup(this.currentPopup);
+        }
+    };
+
     // MapService
     // Author: Ben Glassman <bglassman@gmail.com>
     var MapService = function(container) {
         this.container = container;
-        this.venueSummaryTimeout = null;
         this.currentVenue = null;
         this.venueMarkerMap = {};
-        this.venuePopupMap = {};
     };
 
     MapService.prototype.init = function(options) {
@@ -19,7 +54,14 @@ app.factory('map', function() {
 
         this.map = L.map(this.container);
         this.markerGroup = L.featureGroup().addTo(this.map);
-        this.popupGroup = L.featureGroup().addTo(this.map).bringToFront();
+
+        this.venueDetailsPopupManager = new MapPopupGroupManager(this.map, {
+            group: L.featureGroup().addTo(this.map).bringToFront()
+        });
+
+        this.venueSummaryPopupManager = new MapPopupGroupManager(this.map, {
+            group: L.featureGroup().addTo(this.map).bringToFront()
+        });
 
         // Set map view to vermont
         this.setDefaultView();
@@ -62,16 +104,10 @@ app.factory('map', function() {
             _this = this;
         marker.on({
             mouseover: function(e) {
-                clearTimeout(_this.venueSummaryTimeout);
-                _this.venueSummaryTimeout = setTimeout(function() {
-                    _this.showVenueSummary(venue);
-                }, 250);
+                _this.showVenueSummary(venue);
             },
             mouseout: function(e) {
-                clearTimeout(_this.venueSummaryTimeout);
-                _this.venueSummaryTimeout = setTimeout(function() {
-                    _this.hideVenueSummary(venue);
-                }, 250);
+                _this.hideVenueSummary(venue);
             },
             click: function(e) {
                 _this.displayVenueDetail(venue);
@@ -83,20 +119,51 @@ app.factory('map', function() {
         return marker;
     };
 
-    MapService.prototype.displayVenueDetail = function(venue) {
+    MapService.prototype.createVenuePopup = function(venue, options) {
         var _this = this,
+            options = options || {},
             popup = L.popup({
                 offset: new L.Point(0, -30)
             })
             .setLatLng(new L.LatLng(venue.lat, venue.lng))
+
+        if (options.onClose) {
+            popup.on('close', options.onClose);
+        }
+
+        if (options.group) {
+            group.addLayer(popup);
+        }
+
+        return popup;
+    };
+
+    MapService.prototype.destroyVenuePopup = function(venue) {
+        if ( ! this.venuePopupMap[venue.id]) {
+            return false;
+        }
+
+        this.popupGroup.removeLayer(this.venuePopupMap[venue.id]);
+
+        delete this.venuePopupMap[venue.id];
+
+        return true;
+    };
+
+    MapService.prototype.displayVenueDetail = function(venue) {
+        var _this = this,
+            popup;
+        
+        popup = this.createVenuePopup(venue, {
+                onClose: function(e) {
+                    _this.currentVenue = null;
+                }
+            })
             .setContent(['<h2>', venue.business_name, '</h2><p>', 'Some address', '<br />Phone: ', venue.phone, '</p>'].join(''))
-            .on('close', function(e) {
-                _this.currentVenue = null;
-            });
-            console.log('with popupclose event');
+
+        this.venueDetailsPopupManager.openPopup(popup);
         this.hideVenueSummary(venue);
-        this.popupGroup.clearLayers();
-        this.popupGroup.addLayer(popup)
+
         this.currentVenue = venue;
     }
 
@@ -105,22 +172,22 @@ app.factory('map', function() {
             return false;
         }
 
-        var marker = this.getMarkerByVenueId(venue.id);
-        var popup = L.popup({
-                offset: new L.Point(0, -30)
-            })
-            .setLatLng(new L.LatLng(venue.lat, venue.lng))
+        var popup = this.createVenuePopup(venue)
             .setContent(venue.business_name);
-        this.popupGroup.clearLayers()
-        this.popupGroup.addLayer(popup);
+
+        this.venueSummaryPopupManager.openPopup(popup);
     }
 
     MapService.prototype.hideVenueSummary = function(venue) {
-        this.getMarkerByVenueId(venue.id).closePopup();
+        if (this.currentVenue !== null && this.currentVenue.id == venue.id) {
+            return false;
+        }
+
+        this.venueSummaryPopupManager.closeCurrentPopup();
     }
 
-    MapService.prototype.getMarkerByVenueId = function(venue_id) {
-        return this.venueMarkerMap[venue_id];
+    MapService.prototype.getVenueMarker = function(venue) {
+        return this.venueMarkerMap[venue.id];
     };
 
     // Clear markers
