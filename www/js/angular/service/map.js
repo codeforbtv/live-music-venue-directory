@@ -168,7 +168,7 @@ app.factory('map', function() {
     }
 
     MapService.prototype.showVenueSummary = function(venue) {
-        if (this.currentVenue !== null && this.currentVenue.id == venue.id) {
+        if (this.isCurrentVenue(venue)) {
             return false;
         }
 
@@ -179,11 +179,19 @@ app.factory('map', function() {
     }
 
     MapService.prototype.hideVenueSummary = function(venue) {
-        if (this.currentVenue !== null && this.currentVenue.id == venue.id) {
+        if (this.isCurrentVenue(venue)) {
             return false;
         }
 
         this.venueSummaryPopupManager.closeCurrentPopup();
+    }
+
+    MapService.prototype.isCurrentVenue = function(venue) {
+        if (this.currentVenue !== null && this.currentVenue.id === venue.id) {
+            return true;
+        }
+
+        return false;
     }
 
     MapService.prototype.getVenueMarker = function(venue) {
