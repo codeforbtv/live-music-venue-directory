@@ -59,7 +59,6 @@ app.factory('map', function() {
     MapService.prototype.addVenue = function(venue) {
         var marker = L.marker([venue.lat, venue.lng]),
             _this = this;
-        marker.bindPopup(venue.business_name, this.options.popup_options);
         marker.on({
             mouseover: function(e) {
                 clearTimeout(_this.venueSummaryTimeout);
@@ -84,11 +83,16 @@ app.factory('map', function() {
     };
 
     MapService.prototype.displayVenueDetail = function(venue) {
-        var popup = L.popup({
+        var _this = this,
+            popup = L.popup({
                 offset: new L.Point(0, -30)
             })
             .setLatLng(new L.LatLng(venue.lat, venue.lng))
             .setContent(['<h2>', venue.business_name, '</h2><p>', 'Some address', '<br />Phone: ', venue.phone, '</p>'].join(''))
+            .on('close', function(e) {
+                _this.currentVenue = null;
+            });
+            console.log('with popupclose event');
         this.hideVenueSummary(venue);
         this.popupGroup.clearLayers();
         this.popupGroup.addLayer(popup)
@@ -99,7 +103,15 @@ app.factory('map', function() {
         if (this.currentVenue !== null && this.currentVenue.id == venue.id) {
             return false;
         }
-        this.getMarkerByVenueId(venue.id).openPopup();
+
+        var marker = this.getMarkerByVenueId(venue.id);
+        var popup = L.popup({
+                offset: new L.Point(0, -30)
+            })
+            .setLatLng(new L.LatLng(venue.lat, venue.lng))
+            .setContent(venue.business_name);
+        this.popupGroup.clearLayers()
+        this.popupGroup.addLayer(popup);
     }
 
     MapService.prototype.hideVenueSummary = function(venue) {
