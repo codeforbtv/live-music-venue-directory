@@ -7,8 +7,10 @@ app.factory('map', function() {
     // Author: Ben Glassman <bglassman@gmail.com>
     var MapService = function(container) {
         this.container = container;
-        this.currentVenue = null;
         this.venueSummaryTimeout = null;
+        this.currentVenue = null;
+        this.venueMarkerMap = {};
+        this.venuePopupMap = {};
     };
 
     MapService.prototype.init = function(options) {
@@ -18,7 +20,6 @@ app.factory('map', function() {
         this.map = L.map(this.container);
         this.markerGroup = L.featureGroup().addTo(this.map);
         this.popupGroup = L.featureGroup().addTo(this.map).bringToFront();
-        this.markers = {};
 
         // Set map view to vermont
         this.setDefaultView();
@@ -77,7 +78,7 @@ app.factory('map', function() {
             }
         });
         this.markerGroup.addLayer(marker);
-        this.markers[venue.id] = marker;
+        this.venueMarkerMap[venue.id] = marker;
 
         return marker;
     };
@@ -119,7 +120,7 @@ app.factory('map', function() {
     }
 
     MapService.prototype.getMarkerByVenueId = function(venue_id) {
-        return this.markers[venue_id];
+        return this.venueMarkerMap[venue_id];
     };
 
     // Clear markers
