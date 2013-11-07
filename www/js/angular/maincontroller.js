@@ -27,7 +27,7 @@ app.controller('MainController', function($scope, $http, map) {
     };
 
     $scope.venueHover = function(venue, e) {
-        map.getMarkerByVenueId(venue.id).openPopup();
+        map.showVenueSummary(venue);
     };
 
     $scope.venueClick = function(venue, e) {
