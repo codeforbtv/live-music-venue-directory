@@ -4,7 +4,9 @@ app.controller('MainController', function($scope, $http, Map) {
             lat: 43.871754,
             lon: -72.447783
         },
-        zoom: 7
+        zoom: 7,
+        minResults: 20,
+        $scope: $scope
     });
     $scope.searchText = null;
     $scope.results = [];
@@ -68,5 +70,9 @@ app.controller('MainController', function($scope, $http, Map) {
             return false;
         }
         displayCurrentResult(result);
+    });
+
+    $scope.$on('resultsUpdated', function (event, results) {
+        $scope.results = results;
     });
 });

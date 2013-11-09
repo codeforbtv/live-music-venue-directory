@@ -1,4 +1,4 @@
-app.factory('Map', function($http) {
+app.factory('Map', function($http, $rootScope) {
     var apiKey = '6ded93aafce14dbeaf33173762046262',
         extend = _.extend,
         isEmpty = _.isEmpty;
@@ -77,17 +77,19 @@ app.factory('Map', function($http) {
         },
 
         validateOptions: function(options) {
-            if ( ! this.options.center) {
-                throw new Error('Please provide a center with lat/lon properties');
-            }
+            var options = this.options;
+
+            angular.forEach(['center', 'zoom', '$scope'], function(option) {
+                if (options[option] === undefined) {
+                    throw new Error('Please provide option ' + option);
+                }
+            });
+
             if ( ! this.options.center.lat) {
                 throw new Error('Please provide a center with lat property');
             }
             if ( ! this.options.center.lon) {
                 throw new Error('Please provide a center with lon property');
-            }
-            if ( ! this.options.zoom) {
-                throw new Error('Please provide a starting zoom level');
             }
         },
 
@@ -110,6 +112,8 @@ app.factory('Map', function($http) {
             this.map.addControl(drawControl);
 
             this.map.on('draw:created', function (e) {
+                var $scope = _this.options.$scope;
+
                 drawnItems.clearLayers();
 
                 var type = e.layerType,
@@ -126,7 +130,7 @@ app.factory('Map', function($http) {
                         bounds: JSON.stringify(layer.toGeoJSON())
                     })
                     .success(function(data) {
-                        _this.displayResults(data.results);
+                        $rootScope.$broadcast('resultsUpdated', data.results);
                     });
             });
         },
