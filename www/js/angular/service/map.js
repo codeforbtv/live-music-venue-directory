@@ -125,6 +125,7 @@ app.factory('Map', function($http, $rootScope) {
 
                 drawnItems.addLayer(layer);
 
+                // TODO: This should probably just broadcast a search event with the criteria to be handled by the controller instead of doing the search itself.
                 $http
                     .post('/search_venues.php', {
                         bounds: JSON.stringify(layer.toGeoJSON())
