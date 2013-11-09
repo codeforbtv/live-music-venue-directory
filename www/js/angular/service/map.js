@@ -47,7 +47,6 @@ app.factory('Map', function($http, $rootScope, leafletApiKey) {
         this.container = container;
         this.options = ! isEmpty(options) ? extend(this.getDefaults(), options) : this.getDefaults();
         this.validateOptions(this.options);
-        this.center = null;
     };
 
     MapService.prototype = {
