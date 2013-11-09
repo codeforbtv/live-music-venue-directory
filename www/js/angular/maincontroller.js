@@ -14,21 +14,9 @@ app.controller('MainController', function($scope, $http, Map) {
     $scope.currentResult = null;
     $scope.submitSearch = function() {
         $scope.loading = true;
-        $http.get(
-            '/search_venues.php',
-            {
-                params: {
-                    location: $scope.searchText
-                },
-                responseType: 'json'
-            })
-            .success(function(data) {
-                $scope.results = [];
-                angular.forEach(data.results, function(result, index) {
-                    addResult(result);
-                });
-                $scope.loading = false;
-            });
+        doSearch({
+            location: $scope.searchText
+        });
     };
 
     $scope.initMap = function() {
@@ -55,6 +43,22 @@ app.controller('MainController', function($scope, $http, Map) {
         map.displayResultDetail(result);
     };
 
+    function doSearch(criteria) {
+        $http.get(
+            '/search_venues.php',
+            {
+                params: criteria,
+                responseType: 'json'
+            })
+            .success(function(data) {
+                $scope.results = [];
+                angular.forEach(data.results, function(result, index) {
+                    addResult(result);
+                });
+                $scope.loading = false;
+            });
+    };
+
     // Initialize the map
     $scope.$watch('results', function(results) {
         if (results.length == 0) {
@@ -72,7 +76,7 @@ app.controller('MainController', function($scope, $http, Map) {
         displayCurrentResult(result);
     });
 
-    $scope.$on('resultsUpdated', function (event, results) {
-        $scope.results = results;
+    $scope.$on('searchSubmit', function (event, criteria) {
+        doSearch(criteria);
     });
 });

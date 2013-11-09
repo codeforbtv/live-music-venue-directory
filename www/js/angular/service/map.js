@@ -117,26 +117,21 @@ app.factory('Map', function($http, $rootScope, leafletApiKey) {
             this.map.addControl(drawControl);
 
             this.map.on('draw:created', function (e) {
-                var $scope = _this.options.$scope;
+                var layer = e.layer;
 
-                var type = e.layerType,
-                    layer = e.layer;
+                if (e.layerType === 'circle') {
+                    $rootScope.$broadcast('searchSubmit', {
+                        radius: metersToMiles(layer.getRadius()),
+                        lat: layer.getLatLng().lat,
+                        lon: layer.getLatLng().lng
+                    });
 
-                var params = {};
-                if (type === 'circle') {
-                    params.radius = metersToMiles(layer.getRadius());
-                    params.lat = layer.getLatLng().lat;
-                    params.lon = layer.getLatLng().lng;
-                } else {
-                    params.bounds = JSON.stringify(layer.toGeoJSON().geometry.coordinates[0]);
+                    return;
                 }
 
-                // TODO: This should probably just broadcast a search event with the criteria to be handled by the controller instead of doing the search itself.
-                $http
-                    .get('/search_venues.php', { params: params })
-                    .success(function(data) {
-                        $rootScope.$broadcast('resultsUpdated', data.results);
-                    });
+                $rootScope.$broadcast('searchSubmit', {
+                    bounds: JSON.stringify(layer.toGeoJSON().geometry.coordinates[0])
+                });
             });
         },
 
