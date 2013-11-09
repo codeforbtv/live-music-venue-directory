@@ -89,9 +89,14 @@ class SearchManager
         // Get result ids
         $venuesIndex = $this->search->getIndex('venues');
         $results = $venuesIndex->search($query);
+
         $ids = array();
         foreach ($results as $result) {
             $ids[] = $result->getId();
+        }
+
+        if (empty($ids)) {
+            return array();
         }
 
         // Load venues
