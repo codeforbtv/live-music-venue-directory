@@ -95,8 +95,6 @@ app.factory('Map', function($http, $rootScope, leafletApiKey) {
         },
 
         initDrawingControls: function() {
-            var _this = this;
-
             // Initialize the FeatureGroup to store editable layers
             var drawnItems = new L.FeatureGroup();
             this.map.addLayer(drawnItems);
@@ -188,8 +186,7 @@ app.factory('Map', function($http, $rootScope, leafletApiKey) {
         },
 
         createResultPopup: function(result, options) {
-            var _this = this,
-                options = options || {},
+            var options = options || {},
                 popup = L.popup({
                     offset: new L.Point(0, -30)
                 })
