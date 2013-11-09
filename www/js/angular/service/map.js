@@ -104,10 +104,12 @@ app.factory('Map', function($http, $rootScope, leafletApiKey) {
             // Initialize the draw control and pass it the FeatureGroup of editable layers
             var drawControl = new L.Control.Draw({
                 draw: {
-                    position: 'topleft'
+                    polyline: false,
+                    marker: false
                 },
                 edit: {
-                    featureGroup: drawnItems
+                    featureGroup: drawnItems,
+                    edit: false
                 }
             });
             this.map.addControl(drawControl);
