@@ -45,6 +45,7 @@ app.factory('Map', function($http) {
     var MapService = function(container, options) {
         this.container = container;
         this.options = ! isEmpty(options) ? extend(this.getDefaults(), options) : this.getDefaults();
+        this.validateOptions(this.options);
     };
 
     MapService.prototype = {
@@ -73,6 +74,21 @@ app.factory('Map', function($http) {
             }).addTo(this.map);
 
             this.initDrawingControls();
+        },
+
+        validateOptions: function(options) {
+            if ( ! this.options.center) {
+                throw new Error('Please provide a center with lat/lon properties');
+            }
+            if ( ! this.options.center.lat) {
+                throw new Error('Please provide a center with lat property');
+            }
+            if ( ! this.options.center.lon) {
+                throw new Error('Please provide a center with lon property');
+            }
+            if ( ! this.options.zoom) {
+                throw new Error('Please provide a starting zoom level');
+            }
         },
 
         initDrawingControls: function() {
