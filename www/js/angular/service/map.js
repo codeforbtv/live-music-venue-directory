@@ -1,5 +1,5 @@
-app.factory('Map', function($http, $rootScope) {
-    var apiKey = '6ded93aafce14dbeaf33173762046262',
+app.factory('Map', function($http, $rootScope, leafletApiKey) {
+    var apiKey = leafletApiKey,
         extend = _.extend,
         isEmpty = _.isEmpty;
 
