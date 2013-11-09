@@ -281,27 +281,6 @@ app.factory('Map', function($http, $rootScope) {
             this.map.invalidateSize();
             var bounds = this.markerGroup.getBounds();
 
-            // var center = this.markerGroup.getBounds().getCenter(),
-            //     markers = this.markerGroup.getLayers(),
-            //     bounds = new L.LatLngBounds(),
-            //     nearestMarkers, i;
-
-            // markers.sort(function(a, b) {
-            //     var aDist = a.getLatLng().distanceTo(center),
-            //         bDist = b.getLatLng().distanceTo(center);
-
-            //     return aDist - bDist;
-            // });
-
-            // nearestMarkers = markers.slice(0, this.options.minResults);
-            // for (i = 0; i < nearestMarkers.length; i++) {
-            //     console.log(
-            //         nearestMarkers[i].result.business_name,
-            //         nearestMarkers[i].result.city
-            //     );
-            //     bounds.extend(nearestMarkers[i].getLatLng());
-            // }
-
             this.map.fitBounds(bounds);
         }
 
