@@ -8,7 +8,7 @@ $location = isset($_GET['location']) ? $_GET['location'] : null;
 $county_id = isset($_GET['county_id']) ? $_GET['county_id'] : null;
 $max_results = isset($_GET['max_results']) ? $_GET['max_results'] : 10;
 $radius = isset($_GET['radius']) && !empty($_GET['radius']) ? (int) $_GET['radius'] : 25;
-$bounds = isset($_POST['bounds']) && !empty($_POST['bounds']) ? json_decode($_POST['bounds'], true) : null;
+$bounds = isset($_GET['bounds']) && !empty($_GET['bounds']) ? json_decode($_GET['bounds'], true) : null;
 
 if (empty($location) && empty($county_id) && empty($bounds)) {
     die('Please supply a location, county id or bounds.');
