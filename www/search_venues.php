@@ -7,11 +7,14 @@ $db = require __DIR__ . '/../app/config/database.php';
 $location = isset($_GET['location']) ? $_GET['location'] : null;
 $county_id = isset($_GET['county_id']) ? $_GET['county_id'] : null;
 $max_results = isset($_GET['max_results']) ? $_GET['max_results'] : 10;
-$radius = isset($_GET['radius']) && !empty($_GET['radius']) ? (int) $_GET['radius'] : 25;
+$radius = isset($_GET['radius']) && !empty($_GET['radius']) ? (int) $_GET['radius'] : null;
 $bounds = isset($_GET['bounds']) && !empty($_GET['bounds']) ? json_decode($_GET['bounds'], true) : null;
+$bounds = isset($_GET['bounds']) && !empty($_GET['bounds']) ? json_decode($_GET['bounds'], true) : null;
+$lat = isset($_GET['lat']) ? $_GET['lat'] : null;
+$lon = isset($_GET['lon']) ? $_GET['lon'] : null;
 
-if (empty($location) && empty($county_id) && empty($bounds)) {
-    die('Please supply a location, county id or bounds.');
+if (empty($location) && empty($county_id) && (empty($radius) || empty($lat) || empty($lon)) && empty($bounds)) {
+    die('Please supply a location, county id, lat/lon/radius or bounds.');
 }
 
 $elasticaClient = new \Elastica\Client();
@@ -60,13 +63,13 @@ if ($location) {
     $county = $searchManager->findCounty($county_id);
     $results = $searchManager->findVenuesByCounty($county);
 
+} else if ($lat && $lon && $radius) {
+
+    $results = $searchManager->findVenuesByDistance($lat, $lon, $radius);
+
 } else if ($bounds) {
 
-    if ($bounds['type'] === 'circle') {
-        $results = $searchManager->findVenuesByDistance($bounds['lat'], $bounds['lon'], $bounds['radius']);
-    } else {
-        $results = $searchManager->findVenuesInPolygon($bounds['coordinates']);
-    }
+    $results = $searchManager->findVenuesInPolygon($bounds);
 
 }
 

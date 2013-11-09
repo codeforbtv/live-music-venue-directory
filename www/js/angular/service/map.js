@@ -122,25 +122,18 @@ app.factory('Map', function($http, $rootScope, leafletApiKey) {
                 var type = e.layerType,
                     layer = e.layer;
 
-                var bounds = {
-                    type: type
-                };
+                var params = {};
                 if (type === 'circle') {
-                    bounds.radius = metersToMiles(layer.getRadius());
-                    bounds.lat = layer.getLatLng().lat;
-                    bounds.lon = layer.getLatLng().lng;
+                    params.radius = metersToMiles(layer.getRadius());
+                    params.lat = layer.getLatLng().lat;
+                    params.lon = layer.getLatLng().lng;
                 } else {
-                    bounds.type = 'polygon';
-                    bounds.coordinates = layer.toGeoJSON().geometry.coordinates[0];
+                    params.bounds = JSON.stringify(layer.toGeoJSON().geometry.coordinates[0]);
                 }
 
                 // TODO: This should probably just broadcast a search event with the criteria to be handled by the controller instead of doing the search itself.
                 $http
-                    .get('/search_venues.php', {
-                        params: {
-                            bounds: JSON.stringify(bounds)
-                        }
-                    })
+                    .get('/search_venues.php', { params: params })
                     .success(function(data) {
                         $rootScope.$broadcast('resultsUpdated', data.results);
                     });
