@@ -165,7 +165,7 @@ app.factory('Map', function($http, $rootScope, leafletApiKey) {
 
         // Add a result to the map, with info popup
         addResult: function(result) {
-            var marker = L.marker([result.lat, result.lng]),
+            var marker = L.marker([result.lat, result.lng], { riseOnHover: true}),
                 _this = this;
             marker.result = result;
             marker.on({
