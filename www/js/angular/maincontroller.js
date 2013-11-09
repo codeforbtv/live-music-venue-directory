@@ -5,7 +5,7 @@ app.controller('MainController', function($scope, $http, Map) {
             lon: -72.447783
         },
         zoom: 7,
-        minResults: 20,
+        minResults: 10,
         $scope: $scope
     });
     $scope.searchText = null;

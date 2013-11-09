@@ -46,6 +46,7 @@ app.factory('Map', function($http, $rootScope) {
         this.container = container;
         this.options = ! isEmpty(options) ? extend(this.getDefaults(), options) : this.getDefaults();
         this.validateOptions(this.options);
+        this.center = null;
     };
 
     MapService.prototype = {
@@ -171,6 +172,7 @@ app.factory('Map', function($http, $rootScope) {
         addResult: function(result) {
             var marker = L.marker([result.lat, result.lng]),
                 _this = this;
+            marker.result = result;
             marker.on({
                 mouseover: function(e) {
                     _this.showResultSummary(result);
@@ -277,7 +279,30 @@ app.factory('Map', function($http, $rootScope) {
             // Note: Since map width is percent-based we have to invalidate size before fitting to bounds
             // Without the line below fitbounds will fit bounds based on the map size when the page first loaded
             this.map.invalidateSize();
-            this.map.fitBounds(this.markerGroup.getBounds());
+            var bounds = this.markerGroup.getBounds();
+
+            // var center = this.markerGroup.getBounds().getCenter(),
+            //     markers = this.markerGroup.getLayers(),
+            //     bounds = new L.LatLngBounds(),
+            //     nearestMarkers, i;
+
+            // markers.sort(function(a, b) {
+            //     var aDist = a.getLatLng().distanceTo(center),
+            //         bDist = b.getLatLng().distanceTo(center);
+
+            //     return aDist - bDist;
+            // });
+
+            // nearestMarkers = markers.slice(0, this.options.minResults);
+            // for (i = 0; i < nearestMarkers.length; i++) {
+            //     console.log(
+            //         nearestMarkers[i].result.business_name,
+            //         nearestMarkers[i].result.city
+            //     );
+            //     bounds.extend(nearestMarkers[i].getLatLng());
+            // }
+
+            this.map.fitBounds(bounds);
         }
 
     };

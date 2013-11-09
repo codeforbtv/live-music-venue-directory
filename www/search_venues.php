@@ -41,7 +41,16 @@ if ($location) {
         die('Could not geolocate location ' . $location . '. Error: ' . $e->getMessage());
     }
 
-    $results = $searchManager->findVenuesByDistance($geocoded->getLatitude(), $geocoded->getLongitude(), $radius);
+    // $results = $searchManager->findVenuesByDistance($geocoded->getLatitude(), $geocoded->getLongitude(), $radius);
+
+    $bounds = $geocoded->getBounds();
+
+    $results = $searchManager->findVenuesInPolygon(array(
+        array('lon' => $bounds['west'], 'lat' => $bounds['north']),
+        array('lon' => $bounds['east'], 'lat' => $bounds['north']),
+        array('lon' => $bounds['east'], 'lat' => $bounds['south']),
+        array('lon' => $bounds['west'], 'lat' => $bounds['south']),
+    ));
 
 } else if ($county_id) {
 
