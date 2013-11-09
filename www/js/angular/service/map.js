@@ -1,7 +1,8 @@
 app.factory('Map', function($http, $rootScope, leafletApiKey) {
     var apiKey = leafletApiKey,
         extend = _.extend,
-        isEmpty = _.isEmpty;
+        isEmpty = _.isEmpty,
+        metersToMiles = function(meters) { return meters * 0.000621371; };
 
     // Manage grouped popups where only one can be open at a time
     var MapPopupGroupManager = function(map, options) {
@@ -122,16 +123,24 @@ app.factory('Map', function($http, $rootScope, leafletApiKey) {
                 var type = e.layerType,
                     layer = e.layer;
 
-                if (type === 'marker') {
-                    layer.bindPopup('A popup!');
-                }
-
                 drawnItems.addLayer(layer);
+
+                var bounds = {
+                    type: type
+                };
+                if (type === 'circle') {
+                    bounds.radius = metersToMiles(layer.getRadius());
+                    bounds.lat = layer.getLatLng().lat;
+                    bounds.lon = layer.getLatLng().lng;
+                } else {
+                    bounds.type = 'polygon';
+                    bounds.coordinates = layer.toGeoJSON().geometry.coordinates[0];
+                }
 
                 // TODO: This should probably just broadcast a search event with the criteria to be handled by the controller instead of doing the search itself.
                 $http
                     .post('/search_venues.php', {
-                        bounds: JSON.stringify(layer.toGeoJSON())
+                        bounds: JSON.stringify(bounds)
                     })
                     .success(function(data) {
                         $rootScope.$broadcast('resultsUpdated', data.results);

@@ -62,14 +62,11 @@ if ($location) {
 
 } else if ($bounds) {
 
-    $results = $searchManager->findVenuesInPolygon(array_map(function($lonLatTuple) {
-            return array(
-                'lon' => $lonLatTuple[0],
-                'lat' => $lonLatTuple[1]
-            );
-        }, 
-        array_shift($bounds['geometry']['coordinates'])
-    ));
+    if ($bounds['type'] === 'circle') {
+        $results = $searchManager->findVenuesByDistance($bounds['lat'], $bounds['lon'], $bounds['radius']);
+    } else {
+        $results = $searchManager->findVenuesInPolygon($bounds['coordinates']);
+    }
 
 }
 
