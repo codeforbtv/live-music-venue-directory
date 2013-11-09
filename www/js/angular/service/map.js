@@ -1,4 +1,4 @@
-app.factory('map', function($http) {
+app.factory('Map', function($http) {
     var apiKey = '6ded93aafce14dbeaf33173762046262',
         extend = _.extend,
         isEmpty = _.isEmpty;
@@ -259,5 +259,5 @@ app.factory('map', function($http) {
 
     };
 
-    return new MapService(document.getElementById('search-map'));
+    return MapService;
 });

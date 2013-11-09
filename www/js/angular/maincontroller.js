@@ -1,4 +1,5 @@
-app.controller('MainController', function($scope, $http, map) {
+app.controller('MainController', function($scope, $http, Map) {
+    var map = new Map(document.getElementById('search-map'));
     $scope.searchText = null;
     $scope.venues = [];
     $scope.loading = false;
