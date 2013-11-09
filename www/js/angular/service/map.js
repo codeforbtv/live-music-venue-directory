@@ -110,7 +110,8 @@ app.factory('Map', function($http, $rootScope, leafletApiKey) {
                 },
                 edit: {
                     featureGroup: drawnItems,
-                    edit: false
+                    edit: false,
+                    remove: false
                 }
             });
             this.map.addControl(drawControl);
@@ -118,12 +119,8 @@ app.factory('Map', function($http, $rootScope, leafletApiKey) {
             this.map.on('draw:created', function (e) {
                 var $scope = _this.options.$scope;
 
-                drawnItems.clearLayers();
-
                 var type = e.layerType,
                     layer = e.layer;
-
-                drawnItems.addLayer(layer);
 
                 var bounds = {
                     type: type
