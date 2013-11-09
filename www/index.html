@@ -26,9 +26,12 @@
                     <ul>
                         <li class="venue" ng-repeat="result in results" ng-mouseenter="resultHover(result, $event)" ng-mouseleave="resultHover(result, $event)" ng-click="resultClick(result, $event)" data-id="{{result.id}}">
                             <h2 class="name"><a href="#" title="View Details">{{result.business_name}}</a></h2>
-                            <p class="address">Some address</p>
-                            <p class="phone">{{result.phone}}</p>
-                            <p class="email"><a href="mailto:{{email}}">{{result.email}}</a></p>
+                            <p class="address">
+                                {{result.address1}} {{result.address2}}<br />
+                                {{result.city}}, {{result.state}} {{result.zip}}
+                            </p>
+                            <p class="phone" ng-show="result.phone">{{result.phone}}</p>
+                            <p class="email" ng-show="result.email"><a href="mailto:{{email}}">{{result.email}}</a></p>
                         </li>
                     </ul>
                 </div>
