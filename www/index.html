@@ -15,20 +15,20 @@
 				<p id="tagline">Big Heavy World</p>
 				<h1>Vermont Music Venue Search</h1>
 			</div>
-            <div id="app" ng-app="DirectoryApp" ng-controller="MainController" ng-class="{ twocol: venues.length > 0 }">
+            <div id="app" ng-app="DirectoryApp" ng-controller="MainController" ng-class="{ twocol: results.length > 0 }">
                 <form id="search-form" ng-submit="submitSearch()"> 
                     <input type="text" ng-model="searchText" />
                     <button type="submit">GO</button>
                 </form>
                 <div ng-show="loading">Loading...</div>
                 <div id="search-map" ng-controller="initMap"></div>
-                <div id="search-list" ng-hide="venues.length == 0">
+                <div id="search-list" ng-hide="results.length == 0">
                     <ul>
-                        <li class="venue" ng-repeat="venue in venues" ng-mouseenter="venueHover(venue, $event)" ng-mouseleave="venueHover(venue, $event)" ng-click="venueClick(venue, $event)" data-id="{{venue.id}}">
-                            <h2 class="name"><a href="#" title="View Details">{{venue.business_name}}</a></h2>
+                        <li class="venue" ng-repeat="result in results" ng-mouseenter="resultHover(result, $event)" ng-mouseleave="resultHover(result, $event)" ng-click="resultClick(result, $event)" data-id="{{result.id}}">
+                            <h2 class="name"><a href="#" title="View Details">{{result.business_name}}</a></h2>
                             <p class="address">Some address</p>
-                            <p class="phone">{{venue.phone}}</p>
-                            <p class="email"><a href="mailto:{{email}}">{{venue.email}}</a></p>
+                            <p class="phone">{{result.phone}}</p>
+                            <p class="email"><a href="mailto:{{email}}">{{result.email}}</a></p>
                         </li>
                     </ul>
                 </div>

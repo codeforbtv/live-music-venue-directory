@@ -51,18 +51,18 @@ app.factory('Map', function($http) {
     MapService.prototype = {
 
         init: function(options) {
-            this.currentVenue = null;
-            this.venueMarkerMap = {};
+            this.currentResult = null;
+            this.resultMarkerMap = {};
 
             this.map = L.map(this.container);
 
             this.markerGroup = L.featureGroup().addTo(this.map);
 
-            this.venueDetailsPopupManager = new MapPopupGroupManager(this.map, {
+            this.resultDetailsPopupManager = new MapPopupGroupManager(this.map, {
                 group: L.featureGroup().addTo(this.map).bringToFront()
             });
 
-            this.venueSummaryPopupManager = new MapPopupGroupManager(this.map, {
+            this.resultSummaryPopupManager = new MapPopupGroupManager(this.map, {
                 group: L.featureGroup().addTo(this.map).bringToFront()
             });
 
@@ -126,7 +126,7 @@ app.factory('Map', function($http) {
                         bounds: JSON.stringify(layer.toGeoJSON())
                     })
                     .success(function(data) {
-                        _this.displayVenues(data.results);
+                        _this.displayResults(data.results);
                     });
             });
         },
@@ -149,47 +149,47 @@ app.factory('Map', function($http) {
         reset: function() {
             this.setDefaultView();
             this.clearMarkers();
-            this.currentVenue = null;
+            this.currentResult = null;
         },
 
-        // Display venues on the map
-        displayVenues: function(venues) {
+        // Display results on the map
+        displayResults: function(results) {
             var x;
             this.clearMarkers();
-            for (x in venues) {
-                this.addVenue(venues[x]);
+            for (x in results) {
+                this.addResult(results[x]);
             }
             this.fitToMarkerGroup();
         },
 
-        // Add a venue to the map, with info popup
-        addVenue: function(venue) {
-            var marker = L.marker([venue.lat, venue.lng]),
+        // Add a result to the map, with info popup
+        addResult: function(result) {
+            var marker = L.marker([result.lat, result.lng]),
                 _this = this;
             marker.on({
                 mouseover: function(e) {
-                    _this.showVenueSummary(venue);
+                    _this.showResultSummary(result);
                 },
                 mouseout: function(e) {
-                    _this.hideVenueSummary(venue);
+                    _this.hideResultSummary(result);
                 },
                 click: function(e) {
-                    _this.displayVenueDetail(venue);
+                    _this.displayResultDetail(result);
                 }
             });
             this.markerGroup.addLayer(marker);
-            this.venueMarkerMap[venue.id] = marker;
+            this.resultMarkerMap[result.id] = marker;
 
             return marker;
         },
 
-        createVenuePopup: function(venue, options) {
+        createResultPopup: function(result, options) {
             var _this = this,
                 options = options || {},
                 popup = L.popup({
                     offset: new L.Point(0, -30)
                 })
-                .setLatLng(new L.LatLng(venue.lat, venue.lng))
+                .setLatLng(new L.LatLng(result.lat, result.lng))
 
             if (options.onClose) {
                 popup.on('close', options.onClose);
@@ -202,64 +202,64 @@ app.factory('Map', function($http) {
             return popup;
         },
 
-        destroyVenuePopup: function(venue) {
-            if ( ! this.venuePopupMap[venue.id]) {
+        destroyResultPopup: function(result) {
+            if ( ! this.resultPopupMap[result.id]) {
                 return false;
             }
 
-            this.popupGroup.removeLayer(this.venuePopupMap[venue.id]);
+            this.popupGroup.removeLayer(this.resultPopupMap[result.id]);
 
-            delete this.venuePopupMap[venue.id];
+            delete this.resultPopupMap[result.id];
 
             return true;
         },
 
-        displayVenueDetail: function(venue) {
+        displayResultDetail: function(result) {
             var _this = this,
                 popup;
             
-            popup = this.createVenuePopup(venue, {
+            popup = this.createResultPopup(result, {
                     onClose: function(e) {
-                        _this.currentVenue = null;
+                        _this.currentResult = null;
                     }
                 })
-                .setContent(['<h2>', venue.business_name, '</h2><p>', 'Some address', '<br />Phone: ', venue.phone, '</p>'].join(''))
+                .setContent(['<h2>', result.business_name, '</h2><p>', 'Some address', '<br />Phone: ', result.phone, '</p>'].join(''))
 
-            this.venueDetailsPopupManager.openPopup(popup);
-            this.hideVenueSummary(venue);
+            this.resultDetailsPopupManager.openPopup(popup);
+            this.hideResultSummary(result);
 
-            this.currentVenue = venue;
+            this.currentResult = result;
         },
 
-        showVenueSummary: function(venue) {
-            if (this.isCurrentVenue(venue)) {
+        showResultSummary: function(result) {
+            if (this.isCurrentResult(result)) {
                 return false;
             }
 
-            var popup = this.createVenuePopup(venue)
-                .setContent(venue.business_name);
+            var popup = this.createResultPopup(result)
+                .setContent(result.business_name);
 
-            this.venueSummaryPopupManager.openPopup(popup);
+            this.resultSummaryPopupManager.openPopup(popup);
         },
 
-        hideVenueSummary: function(venue) {
-            if (this.isCurrentVenue(venue)) {
+        hideResultSummary: function(result) {
+            if (this.isCurrentResult(result)) {
                 return false;
             }
 
-            this.venueSummaryPopupManager.closeCurrentPopup();
+            this.resultSummaryPopupManager.closeCurrentPopup();
         },
 
-        isCurrentVenue: function(venue) {
-            if (this.currentVenue !== null && this.currentVenue.id === venue.id) {
+        isCurrentResult: function(result) {
+            if (this.currentResult !== null && this.currentResult.id === result.id) {
                 return true;
             }
 
             return false;
         },
 
-        getVenueMarker: function(venue) {
-            return this.venueMarkerMap[venue.id];
+        getResultMarker: function(result) {
+            return this.resultMarkerMap[result.id];
         },
 
         // Clear markers

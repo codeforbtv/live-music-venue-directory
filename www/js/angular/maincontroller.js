@@ -7,9 +7,9 @@ app.controller('MainController', function($scope, $http, Map) {
         zoom: 7
     });
     $scope.searchText = null;
-    $scope.venues = [];
+    $scope.results = [];
     $scope.loading = false;
-    $scope.currentVenue = null;
+    $scope.currentResult = null;
     $scope.submitSearch = function() {
         $scope.loading = true;
         $http.get(
@@ -21,9 +21,9 @@ app.controller('MainController', function($scope, $http, Map) {
                 responseType: 'json'
             })
             .success(function(data) {
-                $scope.venues = [];
-                angular.forEach(data.results, function(venue, index) {
-                    addVenue(venue);
+                $scope.results = [];
+                angular.forEach(data.results, function(result, index) {
+                    addResult(result);
                 });
                 $scope.loading = false;
             });
@@ -33,40 +33,40 @@ app.controller('MainController', function($scope, $http, Map) {
         map.init();
     };
 
-    $scope.venueHover = function(venue, e) {
+    $scope.resultHover = function(result, e) {
         if (e.type === 'mouseover') {
-            map.showVenueSummary(venue);
+            map.showResultSummary(result);
         } else {
-            map.hideVenueSummary(venue);
+            map.hideResultSummary(result);
         }
     };
 
-    $scope.venueClick = function(venue, e) {
-        $scope.currentVenue = venue;
+    $scope.resultClick = function(result, e) {
+        $scope.currentResult = result;
     };
 
-    function addVenue(venue) {
-        $scope.venues.push(venue);
+    function addResult(result) {
+        $scope.results.push(result);
     };
 
-    function displayCurrentVenue(venue) {
-        map.displayVenueDetail(venue);
+    function displayCurrentResult(result) {
+        map.displayResultDetail(result);
     };
 
     // Initialize the map
-    $scope.$watch('venues', function(venues) {
-        if (venues.length == 0) {
+    $scope.$watch('results', function(results) {
+        if (results.length == 0) {
             map.reset();
             return false;
         }
-        map.displayVenues(venues);
+        map.displayResults(results);
     });
 
-    // Display the current venue on map
-    $scope.$watch('currentVenue', function(venue) {
-        if (venue === null) {
+    // Display the current result on map
+    $scope.$watch('currentResult', function(result) {
+        if (result === null) {
             return false;
         }
-        displayCurrentVenue(venue);
+        displayCurrentResult(result);
     });
 });
