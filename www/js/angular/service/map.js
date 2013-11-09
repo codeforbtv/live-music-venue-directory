@@ -224,7 +224,18 @@ app.factory('Map', function($http, $rootScope, leafletApiKey) {
                         _this.currentResult = null;
                     }
                 })
-                .setContent(['<h2>', result.business_name, '</h2><p>', 'Some address', '<br />Phone: ', result.phone, '</p>'].join(''))
+                // TODO: This should be moved to a rendering service that knows how to render details for a result based on type (venue vs. event, etc.)
+                .setContent([
+                    '<h2>', result.business_name, '</h2>',
+                    '<p>',
+                        result.address1, ' ', result.address2,
+                        '<br />',
+                        result.city, ', ', result.state, ' ', result.zip,
+                        result.phone ? ['<br />', result.phone].join('') : '',
+                        result.website ? ['<br />', '<a href="', result.website, '">', result.website, '</a>'].join('') : '',
+                        result.email ? ['<br />', '<a href="mailto:', result.email, '">', result.email, '</a>'].join('') : '',
+                    '</p>'
+                ].join(''));
 
             this.resultDetailsPopupManager.openPopup(popup);
             this.hideResultSummary(result);
