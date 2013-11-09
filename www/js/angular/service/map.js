@@ -42,17 +42,16 @@ app.factory('Map', function($http) {
 
     // MapService
     // Author: Ben Glassman <bglassman@gmail.com>
-    var MapService = function(container) {
+    var MapService = function(container, options) {
         this.container = container;
-        this.currentVenue = null;
-        this.venueMarkerMap = {};
+        this.options = ! isEmpty(options) ? extend(this.getDefaults(), options) : this.getDefaults();
     };
 
     MapService.prototype = {
 
         init: function(options) {
-            var options = options || {};
-            this.options = !isEmpty(options) ? extend(options, this.getDefaults()) : this.getDefaults();
+            this.currentVenue = null;
+            this.venueMarkerMap = {};
 
             this.map = L.map(this.container);
 
@@ -125,7 +124,10 @@ app.factory('Map', function($http) {
         },
 
         setDefaultView: function() {
-            this.map.setView(new L.LatLng(43.871754,-72.447783), 7);
+            this.map.setView(
+                new L.LatLng(this.options.center.lat, this.options.center.lon),
+                this.options.zoom
+            );
         },
 
         reset: function() {

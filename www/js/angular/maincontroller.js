@@ -1,5 +1,11 @@
 app.controller('MainController', function($scope, $http, Map) {
-    var map = new Map(document.getElementById('search-map'));
+    var map = new Map(document.getElementById('search-map'), {
+        center: {
+            lat: 43.871754,
+            lon: -72.447783
+        },
+        zoom: 7
+    });
     $scope.searchText = null;
     $scope.venues = [];
     $scope.loading = false;
