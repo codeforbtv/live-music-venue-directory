@@ -79,7 +79,7 @@ class SearchManager
         }
     }
 
-    protected function findVenuesInPolygon(array $polygon)
+    public function findVenuesInPolygon(array $polygon)
     {
         $query = new \Elastica\Query();
         $geoPolygonFilter = new \Elastica\Filter\GeoPolygon('venue.location', $polygon);
@@ -89,9 +89,14 @@ class SearchManager
         // Get result ids
         $venuesIndex = $this->search->getIndex('venues');
         $results = $venuesIndex->search($query);
+
         $ids = array();
         foreach ($results as $result) {
             $ids[] = $result->getId();
+        }
+
+        if (empty($ids)) {
+            return array();
         }
 
         // Load venues

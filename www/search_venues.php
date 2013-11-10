@@ -7,10 +7,14 @@ $db = require __DIR__ . '/../app/config/database.php';
 $location = isset($_GET['location']) ? $_GET['location'] : null;
 $county_id = isset($_GET['county_id']) ? $_GET['county_id'] : null;
 $max_results = isset($_GET['max_results']) ? $_GET['max_results'] : 10;
-$radius = isset($_GET['radius']) && !empty($_GET['radius']) ? (int) $_GET['radius'] : 25;
+$radius = isset($_GET['radius']) && !empty($_GET['radius']) ? (int) $_GET['radius'] : null;
+$bounds = isset($_GET['bounds']) && !empty($_GET['bounds']) ? json_decode($_GET['bounds'], true) : null;
+$bounds = isset($_GET['bounds']) && !empty($_GET['bounds']) ? json_decode($_GET['bounds'], true) : null;
+$lat = isset($_GET['lat']) ? $_GET['lat'] : null;
+$lon = isset($_GET['lon']) ? $_GET['lon'] : null;
 
-if (!$location && !$county_id) {
-    die('Please supply a location or county id.');
+if (empty($location) && empty($county_id) && (empty($radius) || empty($lat) || empty($lon)) && empty($bounds)) {
+    die('Please supply a location, county id, lat/lon/radius or bounds.');
 }
 
 $elasticaClient = new \Elastica\Client();
@@ -40,12 +44,32 @@ if ($location) {
         die('Could not geolocate location ' . $location . '. Error: ' . $e->getMessage());
     }
 
-    $results = $searchManager->findVenuesByDistance($geocoded->getLatitude(), $geocoded->getLongitude(), $radius);
+    $bounds = $geocoded->getBounds();
+
+    $results = $searchManager->findVenuesInPolygon(array(
+        array('lon' => $bounds['west'], 'lat' => $bounds['north']),
+        array('lon' => $bounds['east'], 'lat' => $bounds['north']),
+        array('lon' => $bounds['east'], 'lat' => $bounds['south']),
+        array('lon' => $bounds['west'], 'lat' => $bounds['south']),
+    ));
+
+    // If no results were found within the city, try a radius search
+    if (empty($results)) {
+        $results = $searchManager->findVenuesByDistance($geocoded->getLatitude(), $geocoded->getLongitude(), $radius);
+    }
 
 } else if ($county_id) {
 
     $county = $searchManager->findCounty($county_id);
     $results = $searchManager->findVenuesByCounty($county);
+
+} else if ($lat && $lon && $radius) {
+
+    $results = $searchManager->findVenuesByDistance($lat, $lon, $radius);
+
+} else if ($bounds) {
+
+    $results = $searchManager->findVenuesInPolygon($bounds);
 
 }
 
