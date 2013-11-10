@@ -1,4 +1,4 @@
-app.factory('Map', function($http, $rootScope, leafletApiKey) {
+bhw.directoryApp.factory('Map', function($http, $rootScope, leafletApiKey) {
     var apiKey = leafletApiKey,
         extend = _.extend,
         isEmpty = _.isEmpty,

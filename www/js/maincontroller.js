@@ -1,4 +1,4 @@
-app.controller('MainController', function($scope, $http, Map) {
+bhw.directoryApp.controller('MainController', function($scope, $http, Map) {
     var map = new Map(document.getElementById('search-map'), {
         center: {
             lat: 43.871754,

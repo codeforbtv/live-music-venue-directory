@@ -1,3 +1,5 @@
-var app = angular.module('DirectoryApp', []);
+var bhw = bhw || {};
 
-app.value('leafletApiKey', '6ded93aafce14dbeaf33173762046262');
+bhw.directoryApp = angular.module('DirectoryApp', []);
+
+bhw.directoryApp.value('leafletApiKey', '6ded93aafce14dbeaf33173762046262');
