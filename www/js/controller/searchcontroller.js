@@ -1,5 +1,6 @@
-bhw.directoryApp.controller('MainController', function($scope, $http, Map) {
-    var map = new Map(document.getElementById('search-map'), {
+bhw.directoryApp.controller('SearchController', function($scope, $http, $location, $route, Map) {
+    var isEmpty = _.isEmpty,
+        map = new Map(document.getElementById('search-map'), {
         center: {
             lat: 43.871754,
             lon: -72.447783
@@ -12,16 +13,8 @@ bhw.directoryApp.controller('MainController', function($scope, $http, Map) {
     $scope.results = [];
     $scope.loading = false;
     $scope.currentResult = null;
-    $scope.submitSearch = function() {
-        $scope.loading = true;
-        doSearch({
-            location: $scope.searchText
-        });
-    };
 
-    $scope.initMap = function() {
-        map.init();
-    };
+    init();
 
     $scope.resultHover = function(result, e) {
         if (e.type === 'mouseover') {
@@ -35,6 +28,13 @@ bhw.directoryApp.controller('MainController', function($scope, $http, Map) {
         $scope.currentResult = result;
     };
 
+    function init() {
+        map.init();
+        if ( ! isEmpty($location.search())) {
+            doSearch($location.search());
+        }
+    };
+
     function addResult(result) {
         $scope.results.push(result);
     };
@@ -44,6 +44,7 @@ bhw.directoryApp.controller('MainController', function($scope, $http, Map) {
     };
 
     function doSearch(criteria) {
+        $scope.loading = true;
         $http.get(
             '/search_venues.php',
             {
@@ -57,6 +58,10 @@ bhw.directoryApp.controller('MainController', function($scope, $http, Map) {
                 });
                 $scope.loading = false;
             });
+    };
+
+    $scope.submitSearch = function() {
+        $location.path('/').search({ location: $scope.searchText });
     };
 
     // Initialize the map
@@ -77,6 +82,18 @@ bhw.directoryApp.controller('MainController', function($scope, $http, Map) {
     });
 
     $scope.$on('searchSubmit', function (event, criteria) {
-        doSearch(criteria);
+        $scope.$apply(function() {
+            $scope.searchText = null;
+            $location.search(criteria);
+            doSearch(criteria);
+        });
+    });
+    
+    var lastRoute = $route.current;
+    $scope.$on('$locationChangeSuccess', function(event) {
+        if ($route.current.$$route.controller === 'SearchController') {
+            $route.current = lastRoute;
+            doSearch($location.search());
+        }
     });
 });

@@ -1,0 +1,19 @@
+<div ng-class="{ twocol: results.length > 0 }">
+    <div ng-include src="'partials/SearchForm.html'"></div>
+    <div ng-show="loading">Loading...</div>
+    <div id="search-map"></div>
+    <div id="search-list" ng-hide="results.length == 0">
+        <ul>
+            <li class="venue" ng-repeat="result in results" ng-mouseenter="resultHover(result, $event)" ng-mouseleave="resultHover(result, $event)" ng-click="resultClick(result, $event)" data-id="{{result.id}}">
+                <h2 class="name"><a href="#" title="View Details">{{result.business_name}}</a></h2>
+                <p class="address">
+                    {{result.address1}} {{result.address2}}<br />
+                    {{result.city}}, {{result.state}} {{result.zip}}
+                </p>
+                <p class="phone" ng-show="result.phone">{{result.phone}}</p>
+                <p class="email" ng-show="result.email"><a href="mailto:{{email}}">{{result.email}}</a></p>
+                <p class="website" ng-show="result.website"><a href="{{website}}">{{result.website}}</a></p>
+            </li>
+        </ul>
+    </div>
+</div>
