@@ -34,7 +34,7 @@ vi app/config/parameters.php
 4. Import venue data
 
 ```bash
-mysql bigheavyworld -u root -p < sql/venues_data.sql 
+mysql YOURDBNAME -u root -p < sql/venues_data.sql 
 ```
 
 5. Install composer and use it to install third party libraries 
