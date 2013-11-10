@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="DirectoryApp">
     <head>
 		<link rel="stylesheet" type="text/css" href="css/styles.css" />
 		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
@@ -15,36 +15,16 @@
 				<p id="tagline">Big Heavy World</p>
 				<h1>Vermont Music Venue Search</h1>
 			</div>
-            <div id="app" ng-app="DirectoryApp" ng-controller="MainController" ng-class="{ twocol: results.length > 0 }">
-                <form id="search-form" ng-submit="submitSearch()"> 
-                    <input type="text" ng-model="searchText" />
-                    <button type="submit">GO</button>
-                </form>
-                <div ng-show="loading">Loading...</div>
-                <div id="search-map" ng-controller="initMap"></div>
-                <div id="search-list" ng-hide="results.length == 0">
-                    <ul>
-                        <li class="venue" ng-repeat="result in results" ng-mouseenter="resultHover(result, $event)" ng-mouseleave="resultHover(result, $event)" ng-click="resultClick(result, $event)" data-id="{{result.id}}">
-                            <h2 class="name"><a href="#" title="View Details">{{result.business_name}}</a></h2>
-                            <p class="address">
-                                {{result.address1}} {{result.address2}}<br />
-                                {{result.city}}, {{result.state}} {{result.zip}}
-                            </p>
-                            <p class="phone" ng-show="result.phone">{{result.phone}}</p>
-                            <p class="email" ng-show="result.email"><a href="mailto:{{email}}">{{result.email}}</a></p>
-                            <p class="website" ng-show="result.website"><a href="{{website}}">{{result.website}}</a></p>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+            <div id="app" data-ng-view=""></div>
 		</div>
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js" type="text/javascript"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.js" type="text/javascript"></script>
         <script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js" type="text/javascript"></script>
         <script src="/js/lib/leaflet.draw.js" type="text/javascript"></script>
         <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js
 " type="text/javascript"></script>
         <script src="/js/app.js" type="text/javascript"></script>
-        <script src="/js/maincontroller.js" type="text/javascript"></script>
+        <script src="/js/controller/searchcontroller.js" type="text/javascript"></script>
+        <script src="/js/controller/detailcontroller.js" type="text/javascript"></script>
         <script src="/js/service/map.js" type="text/javascript"></script>
     </body>
 </html>
