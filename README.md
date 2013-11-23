@@ -27,31 +27,11 @@ local artists, opening up opportunities for gig swaps that bring
 Vermont's music to other parts of the world. The venue directory
 should be searchable by geographic region.
 
-Track(s)
---------
-
-* Build Civic Apps
-* Open Data
-
-Domain Expert(s)
-----------------
-
-* James Lockridge
-
 Documentation
 -------------
 
-## planning-notes.md
-
-Planning notes from day 1 including requirements, definition of user roles, prioritized user stories and other notes.
-
-## demo-review-notes.md
-
-Notes from discussion with Jim Lockridge after presenting demo/index.html on day 2
-
-## BigHeavyWorldNotes.txt
-
-Nick Edward's notes from day 1 planning.
-
-The idea behind this is use php to provide web services, which will be consumed by a front-side javascript/backbone single page
-application, two demos of which are in the demos folder (one with and without backbone).
+* [Planning notes](docs/planning-notes.md) from day 1 including requirements,
+  definition of user roles, prioritized user stories and other notes.
+* Nick Edward's [notes](docs/BigHeavyWorldNotes.txt) from day 1 planning.
+* [Notes](docs/demo-review-notes.md) from discussion with Jim Lockridge after
+  presenting demo/index.html on day 2.
