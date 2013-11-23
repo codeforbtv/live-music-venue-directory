@@ -5,8 +5,13 @@
         {
             "name": "Ben Glassman",
             "email": "bglassman@gmail.com"
+        },
+        {
+            "name": "Evan Flynn",
+            "email": "evan.flynn@gmail.com"
         }
     ],
+    "license": "Apache-2.0",
     "require": {
         "doctrine/dbal": "2.3.*",
         "willdurand/geocoder": "1.7.0",
