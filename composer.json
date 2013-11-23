@@ -13,10 +13,11 @@
     ],
     "license": "Apache-2.0",
     "require": {
-        "doctrine/dbal": "2.3.*",
-        "willdurand/geocoder": "1.7.0",
-        "kriswallsmith/buzz": "v0.10",
-        "ruflin/elastica": "0.20.5.*@dev"
+        "php": ">=5.4.0",
+        "doctrine/dbal": "2.4.*",
+        "willdurand/geocoder": "2.3.2",
+        "kriswallsmith/buzz": "0.10",
+        "ruflin/elastica": "0.90.5.0"
     },
     "autoload": {
         "psr-0": {
