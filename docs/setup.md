@@ -28,7 +28,7 @@ vi app/config/parameters.php
 3. Import venue data:
 
 ```bash
-mysql YOURDBNAME -u root -p < sql/venues_data.sql 
+php data/import.php
 ```
 
 4. Install composer and use it to install third party libraries:
