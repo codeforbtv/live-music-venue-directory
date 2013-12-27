@@ -15,16 +15,20 @@ Quickstart
 
         git checkout google-maps
 
-Tip: If you have python 2.x, start a web server with `python -m SimpleHTTPServer`. Then, point your browser to `http://localhost:8000/`.
+Tip: If you have Python 2.x, start a web server with `python -m
+SimpleHTTPServer`. Then, point your browser to `http://localhost:8000/`.
 
 Requirements
 ------------
-- When a website user enters a city or town such as "Springfield, VT" into the search box, then a list of nearby venues should appear in a card.
+
+- When a website user enters a city or town such as "Springfield, VT" into the
+search box, then a list of nearby venues should appear in a card.
 
 Roadmap
 -------
 
-- The Fusion Table API allows CRUD operations. The queries are made with JSON. Look into this further.
+- The Fusion Table API allows CRUD operations. The queries are made with JSON.
+Look into this further.
 
 Resources
 ---------
